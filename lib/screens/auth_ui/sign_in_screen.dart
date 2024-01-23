@@ -1,3 +1,4 @@
+import 'package:electro_rent/screens/auth_ui/Sign_up_screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -19,7 +20,11 @@ class _SignInScreenState extends State<SignInScreen> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: AppConstant.appSecondaryColor,
-            title: Text("Sign In.."),
+            centerTitle: true,
+            title: Text("Sign In..",
+              style: TextStyle(
+                  color: AppConstant.appTextColor,),
+            ),
           ),
           body: Container(
             child: Column(
@@ -108,11 +113,23 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                 ),
-                Row(children: [
-                  Text('Dont have an account?',
-                    style: TextStyle(
-                        color: AppConstant.appTextColor),
+
+                SizedBox(
+                  height: Get.height / 20,
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  Text("Dont have an account? ",
+                    style: TextStyle(color: AppConstant.appSecondaryColor),
                   ),
+                  GestureDetector(
+                  onTap: ()=> Get.offAll(() => SignUpScreen()),
+                  child: Text("Sign Up",
+                    style: TextStyle(color: AppConstant.appSecondaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),)
                 ],)
           ],
             ),

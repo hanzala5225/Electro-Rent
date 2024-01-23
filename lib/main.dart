@@ -1,3 +1,4 @@
+import 'package:electro_rent/screens/auth_ui/Sign_up_screen.dart';
 import 'package:electro_rent/screens/auth_ui/sign_in_screen.dart';
 import 'package:electro_rent/screens/auth_ui/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SignInScreen(),
+      home: const SignUpScreen(),
     );
   }
 }
