@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "951794321880",
+    "project_id": "electro-rent-3838d",
+    "storage_bucket": "electro-rent-3838d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951794321880:android:a4a39aeace8884adb88aad",
+        "android_client_info": {
+          "package_name": "com.example.electro_rent"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoH5Ltvq8agjwxkXeuke-Y55-35j5Aq48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
