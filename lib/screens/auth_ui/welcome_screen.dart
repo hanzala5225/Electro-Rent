@@ -1,4 +1,5 @@
 import 'package:electro_rent/controllers/Google_sign_in_controller.dart';
+import 'package:electro_rent/screens/auth_ui/sign_in_screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -88,7 +89,9 @@ class WelcomeScreen extends StatelessWidget {
                     style: TextStyle(
                         color: AppConstant.appTextColor),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(()=> const SignInScreen());
+                  },
                 ),
               ),
             )
