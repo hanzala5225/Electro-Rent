@@ -1,6 +1,7 @@
 import 'package:electro_rent/controllers/Google_sign_in_controller.dart';
 import 'package:electro_rent/screens/auth_ui/welcome_screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
+import 'package:electro_rent/widgets/Custom_Drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,7 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppConstant.appMainColor,
-        title: Text(AppConstant.appMainName),
+        title: Text(AppConstant.appMainName, style: TextStyle(color: AppConstant.appTextColor),),
         centerTitle: true,
         actions: [
           GestureDetector(
@@ -34,6 +35,7 @@ class MainScreen extends StatelessWidget {
           )
         ],
       ),
+      drawer: DrawerWidget(),
     );
   }
 }
