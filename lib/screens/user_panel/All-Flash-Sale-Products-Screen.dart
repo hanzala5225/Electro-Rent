@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:electro_rent/screens/user_panel/Products-Detail-Screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,8 +23,9 @@ class _AllFlashSaleProductsScreenState extends State<AllFlashSaleProductsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(
+      iconTheme: IconThemeData(color: AppConstant.appTextColor),
       backgroundColor: AppConstant.appMainColor,
-      title: Text("All Flash Sale Products"),
+      title: Text("All Flash Sale Products", style: TextStyle(color: AppConstant.appTextColor),),
     ),
       body: FutureBuilder(future: FirebaseFirestore
           .instance.collection('products')
@@ -83,7 +85,7 @@ class _AllFlashSaleProductsScreenState extends State<AllFlashSaleProductsScreen>
               return Row(
                 children: [
                   GestureDetector(
-                    //onTap: () => Get.to(()=> AllSingleCategoryProductScreen(categoryId: categoriesModel.categoryId,)),
+                    onTap: () => Get.to(() => ProductDetailsScreen(productModel: productModel)),
                     child: Padding(padding: EdgeInsets.all(8.0),
                       child: Container(
                         child: FillImageCard(

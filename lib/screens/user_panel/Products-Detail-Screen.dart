@@ -77,6 +77,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(width: 29),
                               Text(
                                 widget.productModel.productName,
                               ),
@@ -93,18 +94,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           child: Row(
                             children: [
                               Text(
-                                "Rent Price  ",
-                                style: TextStyle(color: AppConstant.appMainColor,
+                                widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
+                                    ? "Sale Price: "
+                                    : "Rent Price: ",
+                                style: TextStyle(
+                                  color: AppConstant.appMainColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(width: 16),
                               Text(
-                                widget.productModel.rentPrice.toString() + " PKR",
+                                widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
+                                    ? widget.productModel.salePrice.toString() + " PKR"
+                                    : widget.productModel.rentPrice.toString() + " PKR",
                               ),
                             ],
                           ),
                         ),
                       ),
+
 
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -118,6 +126,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              SizedBox(width: 24),
                               Text(
                                 widget.productModel.categoryName,
                               ),

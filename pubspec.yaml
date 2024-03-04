@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: 3.2.4
+  sdk: 3.3.0
 
 
 # Dependencies specify other packages that your package needs in order to work.
@@ -45,6 +45,9 @@ dependencies:
   cloud_firestore: ^4.14.0
   flutter_easyloading: ^3.0.5
   firebase_messaging: ^14.7.10
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.3.1
+  image_card: ^0.0.4
 
 dev_dependencies:
   flutter_test:
