@@ -3,6 +3,7 @@ import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
 import '../../models/Cart-Model.dart';
 
@@ -26,10 +27,11 @@ class _CartScreenState extends State<CartScreen> {
         style: TextStyle(color: AppConstant.appTextColor),
       ),
     ),
-      body: FutureBuilder(future: FirebaseFirestore
+      body: StreamBuilder(
+          stream: FirebaseFirestore
           .instance.collection('cart')
           .doc(user!.uid).collection('cartOrders')
-          .get(),
+          .snapshots(),
 
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if(snapshot.hasError){
@@ -80,46 +82,66 @@ class _CartScreenState extends State<CartScreen> {
                       productTotalPrice: productData['productTotalPrice'],
                     );
 
-                    return Card(
-                      elevation: 5,
-                      color: AppConstant.appTextColor,
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: AppConstant.appMainColor,
-                          backgroundImage: NetworkImage(cartModel.productImages[0]),
-                        ),
+                    return SwipeActionCell(
+                        key: ObjectKey(cartModel.productId),
+                        trailingActions: [
+                          SwipeAction(
+                            title: "Delete",
+                            forceAlignmentToBoundary: true,
+                            performsFirstActionWithFullSwipe: true,
+                            onTap: (CompletionHandler handler) async{
+                              print("Deleted......");
 
-                        title: Text(cartModel.productName),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(cartModel.productTotalPrice.toString()),
-                            SizedBox(
-                              width: Get.width / 20.0,
-                            ),
-                            CircleAvatar(
-                              radius: 14.0,
+                             await FirebaseFirestore.instance.collection('cart')
+                                  .doc(user!.uid)
+                                  .collection('cartOrders')
+                                  .doc(cartModel.productId)
+                                  .delete();
+                            },
+                          ),
+                        ],
+                        child: Card(
+                          elevation: 5,
+                          color: AppConstant.appTextColor,
+                          child: ListTile(
+                            leading: CircleAvatar(
                               backgroundColor: AppConstant.appMainColor,
-                                child: Text('-'),
+                              backgroundImage: NetworkImage(cartModel.productImages[0]),
                             ),
-                            SizedBox(
-                              width: Get.width / 20.0,
+
+                            title: Text(cartModel.productName),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(cartModel.productTotalPrice.toString()),
+                                SizedBox(
+                                  width: Get.width / 20.0,
+                                ),
+                                CircleAvatar(
+                                  radius: 14.0,
+                                  backgroundColor: AppConstant.appMainColor,
+                                  child: Text('-'),
+                                ),
+                                SizedBox(
+                                  width: Get.width / 20.0,
+                                ),
+                                CircleAvatar(
+                                  radius: 14.0,
+                                  backgroundColor: AppConstant.appMainColor,
+                                  child: Text('+'),
+                                ),
+                              ],
                             ),
-                            CircleAvatar(
-                              radius: 14.0,
-                              backgroundColor: AppConstant.appMainColor,
-                              child: Text('+'),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
                     );
                   },
               ),
             );
           }
+
           return Container();
-        },
+        }, stream: null,
       ),
       bottomNavigationBar: Container(
         margin: EdgeInsets.only(bottom: 5.0),
