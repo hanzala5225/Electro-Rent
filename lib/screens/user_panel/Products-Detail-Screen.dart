@@ -1,11 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:electro_rent/models/Cart-Model.dart';
 import 'package:electro_rent/models/Product-Model.dart';
+import 'package:electro_rent/screens/user_panel/Cart-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get.dart';
+
 
 class ProductDetailsScreen extends StatefulWidget {
   ProductModel productModel;
@@ -16,220 +22,329 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  // GETTING CURRENT USER'S  UID
+  User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: AppConstant.appTextColor),
-      backgroundColor: AppConstant.appMainColor,
-        title: Text("Product Details..",
+        backgroundColor: AppConstant.appMainColor,
+        title: Text(
+          "Product Details..",
           style: TextStyle(color: AppConstant.appTextColor),
         ),
-    ),
+        actions: [
+          GestureDetector(
+            onTap: () => Get.to(() => CartScreen()),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.shopping_cart),
+            ),
+          ),
+        ],
+      ),
       body: Container(
         child: Column(
           children: [
-
             // Products Images
             SizedBox(height: Get.height / 60,),
-        CarouselSlider(
-        items: widget.productModel.productImages
-            .map((imageUrls) => ClipRRect(borderRadius: BorderRadius.circular(10.0),
-            child: CachedNetworkImage(
-              imageUrl: imageUrls,
-              fit: BoxFit.cover,
-              width: Get.width - 10,
-              placeholder: (context,url) => ColoredBox(
-              color: Colors.white,
-              child: Center(
-                child: CupertinoActivityIndicator(),
-              ),
-              ),
-              errorWidget: (
-                  context, url, error)=> Icon(Icons.error),
-            ),
-        ),
-        ).toList(),
-            options: CarouselOptions(
-            scrollDirection: Axis.horizontal,
-            autoPlay: true,
-            aspectRatio: 2.5,
-            viewportFraction: 1,
-            ),
-            ),
-            Padding(padding: EdgeInsets.all(10.0),
-                child: Card(
-                  elevation: 10.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+            CarouselSlider(
+              items: widget.productModel.productImages.map((imageUrls) => ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrls,
+                  fit: BoxFit.cover,
+                  width: Get.width - 10,
+                  placeholder: (context, url) => ColoredBox(
+                    color: Colors.white,
+                    child: Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Product:  ",
-                                style: TextStyle(color: AppConstant.appMainColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(width: 29),
-                              Text(
-                                widget.productModel.productName,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              Text(
-                                widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
-                                    ? "Sale Price: "
-                                    : "Rent Price: ",
-                                style: TextStyle(
-                                  color: AppConstant.appMainColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              Text(
-                                widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
-                                    ? widget.productModel.salePrice.toString() + " PKR"
-                                    : widget.productModel.rentPrice.toString() + " PKR",
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            children: [
-                              Text(
-                                "Category:  ",
-                                style: TextStyle(color: AppConstant.appMainColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(width: 24),
-                              Text(
-                                widget.productModel.categoryName,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Description:  ",
-                                style: TextStyle(color: AppConstant.appMainColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(width: 8), // Adding some spacing between the bold text and the description
-                              Expanded(
-                                child: Text(
-                                  widget.productModel.productDescription,
-                                  textAlign: TextAlign.justify,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-
-
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-
+              ),
+              ).toList(),
+              options: CarouselOptions(
+                scrollDirection: Axis.horizontal,
+                autoPlay: true,
+                aspectRatio: 2.5,
+                viewportFraction: 1,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Card(
+                elevation: 10.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  children: [
+                    // Widget for displaying product details
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: Alignment.topLeft,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Material(
-                              borderRadius: BorderRadius.circular(20.0),
-                              child: Container(
-                                width: Get.width / 2.8,
-                                height: Get.height / 16,
-                                decoration: BoxDecoration(
-                                  color: AppConstant.appSecondaryColor,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: TextButton.icon(
-                                  icon: Icon(
-                                    Icons.message_outlined,
-                                    color: AppConstant.appTextColor,
-                                  ),
-                                  label: Text('Whatsapp!',
-                                    style: TextStyle(
-                                        color: AppConstant.appTextColor),
-                                  ),
-                                  onPressed: () {
-                                    // Get.to(()=> const SignInScreen());
-                                  },
-                                ),
+                            Text(
+                              "Product:  ",
+                              style: TextStyle(color: AppConstant.appMainColor,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            SizedBox(width: 29),
+                            Text(
+                              widget.productModel.productName,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                            SizedBox(width: 20.0,),
 
-                            //whatsapp Button
-                            Material(
-                              borderRadius: BorderRadius.circular(20.0),
-                              child: Container(
-                                width: Get.width / 2.8,
-                                height: Get.height / 16,
-                                decoration: BoxDecoration(
-                                  color: AppConstant.appSecondaryColor,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: TextButton.icon(
-                                  icon: Icon(
-                                    Icons.shopping_cart,
-                                    color: AppConstant.appTextColor,
-                                  ),
-                                  label: Text('Add To Cart!',
-                                    style: TextStyle(
-                                        color: AppConstant.appTextColor),
-                                  ),
-                                  onPressed: () {
-                                    // Get.to(()=> const SignInScreen());
-                                  },
-                                ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
+                                  ? "Sale Price: "
+                                  : "Rent Price: ",
+                              style: TextStyle(
+                                color: AppConstant.appMainColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 16),
+                            Text(
+                              widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
+                                  ? widget.productModel.salePrice.toString() + " PKR"
+                                  : widget.productModel.rentPrice.toString() + " PKR",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: [
+                            Text(
+                              "Category:  ",
+                              style: TextStyle(color: AppConstant.appMainColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 24),
+                            Text(
+                              widget.productModel.categoryName,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Description:  ",
+                              style: TextStyle(color: AppConstant.appMainColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 8), // Adding some spacing between the bold text and the description
+                            Expanded(
+                              child: Text(
+                                widget.productModel.productDescription,
+                                textAlign: TextAlign.justify,
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
             ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // WhatsApp Button
+                  Material(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Container(
+                      width: Get.width / 2.8,
+                      height: Get.height / 16,
+                      decoration: BoxDecoration(
+                        color: AppConstant.appSecondaryColor,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: TextButton.icon(
+                        icon: Icon(
+                          Icons.message_outlined,
+                          color: AppConstant.appTextColor,
+                        ),
+                        label: Text(
+                          'Whatsapp!',
+                          style: TextStyle(color: AppConstant.appTextColor),
+                        ),
+                        onPressed: () {
+                          // Get.to(()=> const SignInScreen());
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20.0,),
+                  // Add to Cart Button
+                  Material(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: Container(
+                      width: Get.width / 2.8,
+                      height: Get.height / 16,
+                      decoration: BoxDecoration(
+                        color: AppConstant.appSecondaryColor,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: TextButton.icon(
+                        icon: Icon(
+                          Icons.shopping_cart,
+                          color: AppConstant.appTextColor,
+                        ),
+                        label: Text(
+                          'Add To Cart!',
+                          style: TextStyle(color: AppConstant.appTextColor),
+                        ),
+                        onPressed: () async {
+                          // Get.to(()=> const SignInScreen());
+                          await checkProductExistence(uId: user!.uid);
+                          showAddToCartMessage();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-     ),
+    );
+  }
+
+// CHECKING IF PRODUCT EXITS OR NOT....................
+
+  Future<void> checkProductExistence({
+    required String uId,
+    int quantityIncrement = 1,
+  }) async{
+    final DocumentReference documentReference = FirebaseFirestore
+        .instance.collection('cart')
+        .doc(uId).collection('cartOrders')
+        .doc(widget.productModel.productId.toString()
+    );
+    DocumentSnapshot snapshot = await documentReference.get();
+
+    if(snapshot.exists){
+      int productQuantity = snapshot['productQuantity'];
+      int updatedQuantity = productQuantity + quantityIncrement;
+      double totalPrice = double.parse(
+          widget.productModel.isSale ?
+          widget.productModel.salePrice :
+          widget.productModel.rentPrice) * updatedQuantity;
+
+      await documentReference.update({
+        'productQuantity': updatedQuantity,
+        'productTotalPrice': totalPrice,
+      });
+
+      print('Product Already Exists In The Cart....');
+
+    }else{
+      await FirebaseFirestore
+          .instance.collection('cart')
+          .doc(uId)
+          .set(
+          {
+            'uId': uId,
+            'createdAt': DateTime.now(),
+          });
+
+      CartModel cartModel = CartModel(
+        productId: widget.productModel.productId,
+        categoryId: widget.productModel.categoryId,
+        productName: widget.productModel.productName,
+        categoryName: widget.productModel.categoryName,
+        salePrice: widget.productModel.salePrice,
+        rentPrice: widget.productModel.rentPrice,
+        deliveryTime: widget.productModel.deliveryTime,
+        isSale: widget.productModel.isSale,
+        productImages: widget.productModel.productImages,
+        productDescription: widget.productModel.productDescription,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        productQuantity: 1,
+        productTotalPrice: double.parse(widget.productModel.isSale ?
+        widget.productModel.salePrice :
+        widget.productModel.rentPrice),
+      );
+
+      await documentReference.set(cartModel.toMap());
+
+      print('Product Added To The Cart....');
+    }
+  }
+
+  // FUNCTION TO SHOW ADD TO CART MESSAGE
+  void showAddToCartMessage() {
+    Get.snackbar(
+      'Product Added to Cart', // Title of the snackbar
+      'Please Check', // Message of the snackbar
+      snackPosition: SnackPosition.BOTTOM, // Position of the snackbar
+      backgroundColor: AppConstant.appSecondaryColor, // Background color of the snackbar
+      colorText: AppConstant.appTextColor, // Text color of the snackbar
+      borderRadius: 10.0, // Border radius of the snackbar
+      margin: EdgeInsets.all(10.0), // Margin around the snackbar
+      maxWidth: Get.width - 20.0, // Maximum width of the snackbar
+      animationDuration: Duration(milliseconds: 500), // Duration of snackbar animation
+      duration: Duration(seconds: 3), // Duration for which snackbar is visible
+       // Animation curve of the snackbar
+      isDismissible: true, // Whether the snackbar can be dismissed by user
+       // Dismiss direction of the snackbar
+      forwardAnimationCurve: Curves.easeOutBack, // Forward animation curve of the snackbar
+      reverseAnimationCurve: Curves.easeInBack, // Reverse animation curve of the snackbar
+      overlayBlur: 2.0, // Blur level of the snackbar overlay
+      overlayColor: Colors.black.withOpacity(0.5), // Color of the snackbar overlay
+      icon: Icon(Icons.check_circle_outline, color: Colors.green), // Icon displayed on the snackbar
+      shouldIconPulse: true, // Whether the icon should pulse or not
+      leftBarIndicatorColor: Colors.green, // Color of the left bar indicator
+      mainButton: TextButton( // Main button displayed on the snackbar
+        onPressed: () {
+          // Action to be performed when main button is pressed
+        },
+        child: Text(
+          'View Cart', // Text of the main button
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0), // Padding of the snackbar
     );
   }
 }
