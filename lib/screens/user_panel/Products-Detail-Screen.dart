@@ -169,6 +169,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Material(
+                              borderRadius: BorderRadius.circular(20.0),
                               child: Container(
                                 width: Get.width / 2.8,
                                 height: Get.height / 16,
@@ -196,6 +197,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
                             //whatsapp Button
                             Material(
+                              borderRadius: BorderRadius.circular(20.0),
                               child: Container(
                                 width: Get.width / 2.8,
                                 height: Get.height / 16,

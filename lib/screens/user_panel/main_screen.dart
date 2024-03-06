@@ -1,9 +1,11 @@
 import 'package:electro_rent/screens/user_panel/All-Categories-Screen.dart';
 import 'package:electro_rent/screens/user_panel/All-Flash-Sale-Products-Screen.dart';
+import 'package:electro_rent/screens/user_panel/Cart-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:electro_rent/widgets/Banners.dart';
 import 'package:electro_rent/widgets/Custom_Drawer.dart';
 import 'package:electro_rent/widgets/Heading-Widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/All-Products-Widget.dart';
@@ -22,6 +24,15 @@ class MainScreen extends StatelessWidget {
         backgroundColor: AppConstant.appMainColor,
         title: Text(AppConstant.appMainName, style: const TextStyle(color: AppConstant.appTextColor),),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () => Get.to(() => CartScreen()),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.shopping_cart),
+            ),
+          ),
+        ],
       ),
 
       // calling Drawer Widget
