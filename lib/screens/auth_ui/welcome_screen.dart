@@ -21,9 +21,9 @@ class WelcomeScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppConstant.appSecondaryColor,
         title: const Text('Welcome To Electro-Rent',
-        style: TextStyle(color: AppConstant.appTextColor),
+          style: TextStyle(color: AppConstant.appTextColor),
         ),
-    ),
+      ),
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -32,10 +32,10 @@ class WelcomeScreen extends StatelessWidget {
               child: Lottie.asset('assets/images/splash-icons.json'),),
             Container(
               margin: EdgeInsets.only(top: 20.0),
-                child: Text("Happy Rental Shopping",
-            style: TextStyle(fontSize: 16.0,
-                fontWeight: FontWeight.bold),
-                ),
+              child: Text("Happy Rental Shopping",
+                style: TextStyle(fontSize: 16.0,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(
               height: Get.height / 12,
@@ -82,7 +82,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 child: TextButton.icon(
                   icon: Icon(
-                      Icons.email,
+                    Icons.email,
                     color: AppConstant.appTextColor,
                   ),
                   label: Text('Sign in with Gmail!',
@@ -101,4 +101,3 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
-

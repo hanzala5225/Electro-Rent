@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:electro_rent/services/Place-Order-Service.dart';
+import 'package:electro_rent/screens/user_panel/CheckOut-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import '../../controllers/Cart-Price-Controller.dart';
 import '../../controllers/Get-Customer-Device-Token-Controller.dart';
 import '../../models/Cart-Model.dart';
+import '../../services/Place-Order-Service.dart';
 
 class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key});
@@ -21,6 +22,7 @@ class CheckOutScreen extends StatefulWidget {
 class _CartScreenState extends State<CheckOutScreen> {
   // CART PRICE CONTROLLER
   final ProductPriceController productPriceController = Get.put(ProductPriceController());
+
   User? user = FirebaseAuth.instance.currentUser;
 
   TextEditingController nameController = TextEditingController();
@@ -70,8 +72,7 @@ class _CartScreenState extends State<CheckOutScreen> {
                 itemCount: snapshot.data!.docs.length,
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index){
-
+                itemBuilder: (context, index) {
                   final productData = snapshot.data!.docs[index];
 
                   // model values
@@ -92,42 +93,55 @@ class _CartScreenState extends State<CheckOutScreen> {
                     productTotalPrice: productData['productTotalPrice'],
                   );
 
+
+                  // Extracting product details from Firestore snapshot
+                  String productName = productData['productName'];
+                  double productTotalPrice = productData['productTotalPrice'];
+                  int productQuantity = productData['productQuantity'];
+                  List<String> productImages = List<String>.from(productData['productImages']);
+
                   // CALCULATING PRICE
                   productPriceController.fetchProductPrice();
 
                   return SwipeActionCell(
                     key: ObjectKey(cartModel.productId),
-                    trailingActions: [
-                      SwipeAction(
-                        title: "Delete",
-                        forceAlignmentToBoundary: true,
-                        performsFirstActionWithFullSwipe: true,
-                        onTap: (CompletionHandler handler) async{
-                          print("Deleted......");
-
-                          await FirebaseFirestore.instance.collection('cart')
-                              .doc(user!.uid)
-                              .collection('cartOrders')
-                              .doc(cartModel.productId)
-                              .delete();
-                        },
-                      ),
-                    ],
                     child: Card(
                       elevation: 5,
                       color: AppConstant.appTextColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: AppConstant.appMainColor,
-                          backgroundImage: NetworkImage(cartModel.productImages[0]),
+                        leading: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            image: DecorationImage(
+                              image: NetworkImage(productImages.isNotEmpty ? productImages[0] : ''),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-
-                        title: Text(cartModel.productName),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                        title: Text(
+                          productName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(cartModel.productTotalPrice.toString()),
-
+                            SizedBox(height: 5),
+                            Text(
+                              'Total Price: PKR: ${productTotalPrice.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(height: 5),
                           ],
                         ),
                       ),
@@ -135,6 +149,7 @@ class _CartScreenState extends State<CheckOutScreen> {
                   );
                 },
               ),
+
             );
           }
 
@@ -150,10 +165,13 @@ class _CartScreenState extends State<CheckOutScreen> {
                 color: AppConstant.appMainColor,
                 fontWeight: FontWeight.bold),
             ),
-            Obx(() => Text(
-              "${productPriceController.totalPrice.value.toStringAsFixed(1)} : PKR",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Obx(() {
+              double totalPrice = productPriceController.totalPrice.value;
+              return Text(
+                "${totalPrice.toStringAsFixed(1)} : PKR",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              );
+            },
             ),
 
             Padding(
@@ -168,10 +186,10 @@ class _CartScreenState extends State<CheckOutScreen> {
                   ),
                   child: TextButton.icon(
                     icon: Icon(
-                      Icons.shopping_bag,
+                      Icons.shopping_cart_checkout_sharp,
                       color: AppConstant.appTextColor,
                     ),
-                    label: Text('Confirm Order!!',
+                    label: Text('CheckOut!!',
                       style: TextStyle(
                           color: AppConstant.appTextColor),
                     ),
@@ -189,105 +207,104 @@ class _CartScreenState extends State<CheckOutScreen> {
   }
   void showCustomBottomSheet(){
     Get.bottomSheet(
-      Container(
-        height: Get.height * 0.8,
-        decoration: BoxDecoration(color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(16.0),
+        Container(
+          height: Get.height * 0.8,
+          decoration: BoxDecoration(color: Colors.white,
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(16.0),
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-                child: Container(
-                  height: 55.0,
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(labelText: "Name: ",
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10.0),
-                      hintStyle: TextStyle(fontSize: 12.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                  child: Container(
+                    height: 55.0,
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(labelText: "Name: ",
+                        contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10.0),
+                        hintStyle: TextStyle(fontSize: 12.0),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-                child: Container(
-                  height: 55.0,
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(labelText: "Phone: ",
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10.0),
-                      hintStyle: TextStyle(fontSize: 12.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                  child: Container(
+                    height: 55.0,
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(labelText: "Phone: ",
+                        contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10.0),
+                        hintStyle: TextStyle(fontSize: 12.0),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-                child: Container(
-                  height: 55.0,
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    keyboardType: TextInputType.streetAddress,
-                    decoration: InputDecoration(labelText: "Address: ",
-                      contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10.0),
-                      hintStyle: TextStyle(fontSize: 12.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                  child: Container(
+                    height: 55.0,
+                    child: TextFormField(
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.streetAddress,
+                      decoration: InputDecoration(labelText: "Address: ",
+                        contentPadding:
+                        EdgeInsets.symmetric(horizontal: 10.0),
+                        hintStyle: TextStyle(fontSize: 12.0),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppConstant.appMainColor,
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                ),
-                onPressed: () async {
-                  if (nameController.text != "" && phoneController.text != '' && addressController.text != ''){
-                    String name = nameController.text.trim();
-                    String phone = phoneController.text.trim();
-                    String address = addressController.text.trim();
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppConstant.appMainColor,
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  ),
+                  onPressed: () async {
+                    if (nameController.text != "" && phoneController.text != '' && addressController.text != ''){
+                      String name = nameController.text.trim();
+                      String phone = phoneController.text.trim();
+                      String address = addressController.text.trim();
 
-                    String customerToken = await getCustomerDeviceToken();
+                      String customerToken = await getCustomerDeviceToken();
 
 
-                    // Place Order Service
-                    placeOrder(
+                      // Place Order Service
+                      placeOrder(
                         context: context,
                         customerName: name,
                         customerPhone: phone,
                         customerAddress: address,
                         customerDeviceToken: customerToken,
-                    );
-                  }
-                  else{
-                    print("Please Fill all details....");
-                  }
-                },
+                      );
+                    }
+                    else{
+                      print("Please Fill all details....");
+                    }
+                  },
 
-                child: Text("Place Your Order",
-                  style: TextStyle(color: Colors.white),
+                  child: Text("Place Your Order",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-      backgroundColor: Colors.transparent,
-      isDismissible: true,
-      enableDrag: true,
-      elevation: 6,
-    );
-  }
+        backgroundColor: Colors.transparent,
+        isDismissible: true,
+        enableDrag: true,
+        elevation:6,
+        );
+    }
 }
-

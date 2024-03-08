@@ -50,12 +50,12 @@ class _SignInScreenState extends State<SignUpScreen> {
                     ),
                     Container(
                       alignment: Alignment.center,
-                        child: const Text('Wecome To Electro-Rent',
-                            style: TextStyle(
-                                color: AppConstant.appSecondaryColor,
-                                fontWeight: FontWeight.bold, fontSize: 16.0,
+                      child: const Text('Wecome To Electro-Rent',
+                        style: TextStyle(
+                          color: AppConstant.appSecondaryColor,
+                          fontWeight: FontWeight.bold, fontSize: 16.0,
                         ),
-                    ),
+                      ),
                     ),
                     SizedBox(
                       height: Get.height / 20,
@@ -69,7 +69,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                         child: TextFormField(
 
                           // giving controller to each field to store data
-                        controller: userEmail,
+                          controller: userEmail,
 
                           cursorColor: AppConstant.appSecondaryColor,
                           keyboardType: TextInputType.emailAddress,
@@ -93,7 +93,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                         child: TextFormField(
 
                           // giving controller to each field to store data
-                        controller: username,
+                          controller: username,
 
                           cursorColor: AppConstant.appSecondaryColor,
                           keyboardType: TextInputType.name,
@@ -117,7 +117,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                         child: TextFormField(
 
                           // giving controller to each field to store data
-                        controller: userPhone,
+                          controller: userPhone,
 
                           cursorColor: AppConstant.appSecondaryColor,
                           keyboardType: TextInputType.phone,
@@ -141,7 +141,7 @@ class _SignInScreenState extends State<SignUpScreen> {
                         child: TextFormField(
 
                           // giving controller to each field to store data
-                        controller: userCity,
+                          controller: userCity,
 
                           cursorColor: AppConstant.appSecondaryColor,
                           keyboardType: TextInputType.streetAddress,
@@ -177,9 +177,9 @@ class _SignInScreenState extends State<SignUpScreen> {
 
                             // making icon clickable
                             suffixIcon: GestureDetector(
-                              onTap: () {
-                                signUpController.isPasswordVisible.toggle();
-                              },
+                                onTap: () {
+                                  signUpController.isPasswordVisible.toggle();
+                                },
                                 child: signUpController.isPasswordVisible.value ?
                                 Icon(Icons.visibility_off)
                                     : Icon(Icons.visibility)
@@ -223,13 +223,13 @@ class _SignInScreenState extends State<SignUpScreen> {
                             String userDeviceToken = '';
 
                             if(name.isEmpty || email.isEmpty || phone.isEmpty || city.isEmpty || phone.isEmpty || password.isEmpty)
-                              {
-                                Get.snackbar("ERROR", "PLEASE ENTER ALL THE REQUIRED DETAILS...",
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor: AppConstant.appSecondaryColor,
-                                  colorText: AppConstant.appTextColor,
-                                );
-                              }
+                            {
+                              Get.snackbar("ERROR", "PLEASE ENTER ALL THE REQUIRED DETAILS...",
+                                snackPosition: SnackPosition.BOTTOM,
+                                backgroundColor: AppConstant.appSecondaryColor,
+                                colorText: AppConstant.appTextColor,
+                              );
+                            }
                             else{
                               UserCredential? userCredential =
                               await signUpController.signUpMethod(
@@ -285,4 +285,3 @@ class _SignInScreenState extends State<SignUpScreen> {
     );
   }
 }
-
