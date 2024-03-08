@@ -1,4 +1,7 @@
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:electro_rent/services/Place-Order-Service.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -258,10 +261,22 @@ class _CartScreenState extends State<CheckOutScreen> {
                     String address = addressController.text.trim();
 
                     String customerToken = await getCustomerDeviceToken();
-                  } else{
+
+
+                    // Place Order Service
+                    placeOrder(
+                        context: context,
+                        customerName: name,
+                        customerPhone: phone,
+                        customerAddress: address,
+                        customerDeviceToken: customerToken,
+                    );
+                  }
+                  else{
                     print("Please Fill all details....");
                   }
                 },
+
                 child: Text("Place Your Order",
                   style: TextStyle(color: Colors.white),
                 ),
