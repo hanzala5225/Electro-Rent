@@ -323,7 +323,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       margin: EdgeInsets.all(10.0), // Margin around the snackbar
       maxWidth: Get.width - 20.0, // Maximum width of the snackbar
       animationDuration: Duration(milliseconds: 500), // Duration of snackbar animation
-      duration: Duration(seconds: 5), // Duration for which snackbar is visible
+      duration: Duration(seconds: 3), // Duration for which snackbar is visible
       isDismissible: true, // Whether the snackbar can be dismissed by user
       dismissDirection: DismissDirection.horizontal, // Dismiss direction of the snackbar
       snackStyle: SnackStyle.FLOATING, // Animation curve of the snackbar

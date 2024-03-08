@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:electro_rent/screens/user_panel/CheckOut-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
+import '../../controllers/Cart-Price-Controller.dart';
 import '../../models/Cart-Model.dart';
 
 class CartScreen extends StatefulWidget {
@@ -16,6 +18,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  // CART PRICE CONTROLLER
+  final ProductPriceController productPriceController = Get.put(ProductPriceController());
 
   User? user = FirebaseAuth.instance.currentUser;
   @override
@@ -82,6 +86,9 @@ class _CartScreenState extends State<CartScreen> {
                       productQuantity: productData['productQuantity'],
                       productTotalPrice: productData['productTotalPrice'],
                     );
+
+                    // CALCULATING PRICE
+                    productPriceController.fetchProductPrice();
 
                     return SwipeActionCell(
                         key: ObjectKey(cartModel.productId),
@@ -187,8 +194,10 @@ class _CartScreenState extends State<CartScreen> {
               color: AppConstant.appMainColor,
                 fontWeight: FontWeight.bold),
             ),
-            Text(" 12,000", style: TextStyle(
-                fontWeight: FontWeight.bold),
+            Obx(() => Text(
+              "${productPriceController.totalPrice.value.toStringAsFixed(1)} : PKR",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             ),
 
             Padding(
@@ -211,6 +220,7 @@ class _CartScreenState extends State<CartScreen> {
                           color: AppConstant.appTextColor),
                     ),
                     onPressed: () {
+                      Get.to(()=> CheckOutScreen());
                     },
                   ),
                 ),
