@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/services/Place-Order-Service.dart';
 import 'package:electro_rent/utils/app_constant.dart';
