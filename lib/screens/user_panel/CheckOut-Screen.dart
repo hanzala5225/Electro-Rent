@@ -19,8 +19,12 @@ class CheckOutScreen extends StatefulWidget {
 class _CartScreenState extends State<CheckOutScreen> {
   // CART PRICE CONTROLLER
   final ProductPriceController productPriceController = Get.put(ProductPriceController());
-
   User? user = FirebaseAuth.instance.currentUser;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,85 +185,93 @@ class _CartScreenState extends State<CheckOutScreen> {
       ),
     );
   }
-}
-
-void showCustomBottomSheet(){
-  Get.bottomSheet(
-    Container(
-      height: Get.height * 0.8,
-      decoration: BoxDecoration(color: Colors.white,
-      borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16.0),
+  void showCustomBottomSheet(){
+    Get.bottomSheet(
+      Container(
+        height: Get.height * 0.8,
+        decoration: BoxDecoration(color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(16.0),
+          ),
         ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Container(
-                height: 55.0,
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(labelText: "Name: ",
-                  contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10.0),
-                    hintStyle: TextStyle(fontSize: 12.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                child: Container(
+                  height: 55.0,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.name,
+                    decoration: InputDecoration(labelText: "Name: ",
+                      contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10.0),
+                      hintStyle: TextStyle(fontSize: 12.0),
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Container(
-                height: 55.0,
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(labelText: "Phone: ",
-                    contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10.0),
-                    hintStyle: TextStyle(fontSize: 12.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                child: Container(
+                  height: 55.0,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(labelText: "Phone: ",
+                      contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10.0),
+                      hintStyle: TextStyle(fontSize: 12.0),
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Container(
-                height: 55.0,
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.streetAddress,
-                  decoration: InputDecoration(labelText: "Address: ",
-                    contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10.0),
-                    hintStyle: TextStyle(fontSize: 12.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+                child: Container(
+                  height: 55.0,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    keyboardType: TextInputType.streetAddress,
+                    decoration: InputDecoration(labelText: "Address: ",
+                      contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10.0),
+                      hintStyle: TextStyle(fontSize: 12.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-            
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
+
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: AppConstant.appMainColor,
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                ),
+                onPressed: (){
+                  if (nameController.text != "" && phoneController.text != '' && addressController.text != ''){
+                    String name = nameController.text.trim();
+                    String phone = phoneController.text.trim();
+                    String address = addressController.text.trim();
+                  }else{
+                    print("Please Fill all details....");
+                  }
+                },
+                child: Text("Place Your Order",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-              onPressed: (){},
-              child: Text("Place Your Order",
-              style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-    backgroundColor: Colors.transparent,
-    isDismissible: true,
-    enableDrag: true,
-    elevation: 6,
-  );
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: true,
+      elevation: 6,
+    );
+  }
 }
+
