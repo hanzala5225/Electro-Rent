@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
 import '../../controllers/Cart-Price-Controller.dart';
+import '../../controllers/Get-Customer-Device-Token-Controller.dart';
 import '../../models/Cart-Model.dart';
 
 class CheckOutScreen extends StatefulWidget {
@@ -250,12 +251,14 @@ class _CartScreenState extends State<CheckOutScreen> {
                   backgroundColor: AppConstant.appMainColor,
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                 ),
-                onPressed: (){
+                onPressed: () async {
                   if (nameController.text != "" && phoneController.text != '' && addressController.text != ''){
                     String name = nameController.text.trim();
                     String phone = phoneController.text.trim();
                     String address = addressController.text.trim();
-                  }else{
+
+                    String customerToken = await getCustomerDeviceToken();
+                  } else{
                     print("Please Fill all details....");
                   }
                 },
