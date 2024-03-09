@@ -43,7 +43,7 @@ class MainScreen extends StatelessWidget {
         child: Container(
           child: Column(
             children: [
-          SizedBox(height: Get.height / 90.0,),
+              SizedBox(height: Get.height / 90.0,),
 
               // calling banners Widget
               BannerWidget(),
@@ -56,10 +56,10 @@ class MainScreen extends StatelessWidget {
                 buttonText: "See More >",
               ),
 
-          // calling categories Widget
+              // calling categories Widget
               CategoriesWidget(),
 
-          // calling heading Widget
+              // calling heading Widget
               HeadingWidget(
                 headingTitle: "Flash Sale..",
                 headingSubTitle: "According to your budget",
@@ -67,10 +67,11 @@ class MainScreen extends StatelessWidget {
                 buttonText: "See More >",
               ),
 
-          // calling flash-sale Widget
+              // calling flash-sale Widget
               FlashSaleWidget(),
 
-          // calling heading Widget
+
+              // calling heading Widget
               HeadingWidget(
                 headingTitle: "Popular Products..",
                 headingSubTitle: "According to your budget",
@@ -79,7 +80,7 @@ class MainScreen extends StatelessWidget {
               ),
 
               AllProductsWidget(),
-        ],
+            ],
           ),
         ),
       ),

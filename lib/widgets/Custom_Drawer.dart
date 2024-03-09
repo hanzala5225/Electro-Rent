@@ -1,4 +1,5 @@
 import 'package:electro_rent/screens/auth_ui/welcome_screen.dart';
+import 'package:electro_rent/screens/user_panel/All-Orders-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,6 +79,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 title: Text('Orders', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: Icon(Icons.shopping_bag, color: AppConstant.appTextColor),
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                onTap: (){
+                  Get.back();
+                  Get.to(()=> AllOrdersScreen());
+                },
               ),
             ),
 

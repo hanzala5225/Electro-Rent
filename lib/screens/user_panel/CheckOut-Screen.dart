@@ -16,10 +16,10 @@ class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key});
 
   @override
-  State<CheckOutScreen> createState() => _CartScreenState();
+  State<CheckOutScreen> createState() => _CheckOutScreenState();
 }
 
-class _CartScreenState extends State<CheckOutScreen> {
+class _CheckOutScreenState extends State<CheckOutScreen> {
   // CART PRICE CONTROLLER
   final ProductPriceController productPriceController = Get.put(ProductPriceController());
 
