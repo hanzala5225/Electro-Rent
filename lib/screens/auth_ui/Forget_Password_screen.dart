@@ -25,6 +25,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         builder: (context, isKeyboardVisible){
           return Scaffold(
             appBar: AppBar(
+              iconTheme: IconThemeData(color: AppConstant.appTextColor),
               backgroundColor: AppConstant.appSecondaryColor,
               centerTitle: true,
               title: const Text("Foget Password",

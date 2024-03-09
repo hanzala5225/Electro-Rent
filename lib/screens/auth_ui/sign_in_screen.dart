@@ -32,6 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
       builder: (context, isKeyboardVisible){
         return Scaffold(
           appBar: AppBar(
+            iconTheme: IconThemeData(color: AppConstant.appTextColor),
             backgroundColor: AppConstant.appSecondaryColor,
             centerTitle: true,
             title: Text("Sign In..",
@@ -42,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
           body: Container(
             child: Column(
               children: [
-                isKeyboardVisible? const Text('Wecome To Electro-Rent'):
+                isKeyboardVisible? const Text('Welcome To Electro-Rent'):
                     Column(children: [
                       Lottie.asset('assets/images/splash-icons.json'),
                     ],

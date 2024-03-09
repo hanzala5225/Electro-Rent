@@ -222,6 +222,7 @@ class _CartScreenState extends State<CheckOutScreen> {
                   child: Container(
                     height: 55.0,
                     child: TextFormField(
+                      controller: nameController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(labelText: "Name: ",
@@ -238,6 +239,7 @@ class _CartScreenState extends State<CheckOutScreen> {
                   child: Container(
                     height: 55.0,
                     child: TextFormField(
+                      controller: phoneController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(labelText: "Phone: ",
@@ -254,6 +256,7 @@ class _CartScreenState extends State<CheckOutScreen> {
                   child: Container(
                     height: 55.0,
                     child: TextFormField(
+                      controller: addressController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.streetAddress,
                       decoration: InputDecoration(labelText: "Address: ",
@@ -271,7 +274,9 @@ class _CartScreenState extends State<CheckOutScreen> {
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                   ),
                   onPressed: () async {
-                    if (nameController.text != "" && phoneController.text != '' && addressController.text != ''){
+                    if (nameController.text != "" &&
+                        phoneController.text != '' &&
+                        addressController.text != '') {
                       String name = nameController.text.trim();
                       String phone = phoneController.text.trim();
                       String address = addressController.text.trim();
@@ -288,9 +293,9 @@ class _CartScreenState extends State<CheckOutScreen> {
                         customerDeviceToken: customerToken,
                       );
                     }
-                    else{
+                    else {
                       print("Please Fill all details....");
-                    }
+                    };
                   },
 
                   child: Text("Place Your Order",

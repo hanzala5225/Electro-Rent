@@ -17,6 +17,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: AppConstant.appTextColor),
         elevation: 0,
         centerTitle: true,
         backgroundColor: AppConstant.appSecondaryColor,
