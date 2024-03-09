@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   ProductModel productModel;
@@ -201,12 +202,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   style: TextStyle(color: AppConstant.appTextColor),
                                 ),
                                 onPressed: () {
-                                  // Get.to(()=> const SignInScreen());
+                                  sendMessageOnWhatsapp(
+                                    productModel: widget.productModel,
+                                  );
                                 },
                               ),
                             ),
                           ),
-                          SizedBox(width: 20.0,),
+                          
+                          const SizedBox(width: 20.0,),
+
                           // Add to Cart Button
                           Material(
                             borderRadius: BorderRadius.circular(20.0),
@@ -246,6 +251,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
       ),
     );
+  }
+
+  static Future<void> sendMessageOnWhatsapp({
+    required ProductModel productModel,
+  }) async {
+    final number = "+923185673831";
+    final message =
+        "Hello *Electro-Rent* \n\n"
+        "I want to rent this product \n\n"
+        "*Product Name:* ${productModel.productName} \n"
+        "*Product ID:* ${productModel.productId} \n\n"
+        "Kindly give me details of it and what procedures do I have to follow \n\n"
+        "*Thank You!!*";
+
+    final url = "https://wa.me/$number?text=${Uri.encodeComponent(message)}";
+    
+    if(await canLaunch(url)){
+      await launch(url);
+    }else{
+      throw "Could Not Launch $url";
+    }
   }
 
 // CHECKING IF PRODUCT EXITS OR NOT....................

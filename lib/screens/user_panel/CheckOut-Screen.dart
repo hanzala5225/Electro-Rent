@@ -186,7 +186,7 @@ class _CartScreenState extends State<CheckOutScreen> {
                   ),
                   child: TextButton.icon(
                     icon: Icon(
-                      Icons.shopping_cart_checkout_sharp,
+                      Icons.shopping_bag,
                       color: AppConstant.appTextColor,
                     ),
                     label: Text('CheckOut!!',
