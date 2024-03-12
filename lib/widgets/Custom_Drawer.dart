@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../screens/user_panel/Contact-Us-Screen.dart';
+import '../screens/user_panel/Terms-And-Condition-Screen.dart';
+
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
 
@@ -94,6 +97,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 title: Text('Contact Us', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: Icon(Icons.help, color: AppConstant.appTextColor),
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                onTap: (){
+                  Get.back();
+                  Get.to(()=> ContactUsScreen());
+                },
               ),
             ),
 
@@ -107,7 +114,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
                 onTap: (){
                   Get.back();
-                  Get.to(()=> AllOrdersScreen());
+                  Get.to(()=> TermsAndConditionsScreen());
                 },
               ),
             ),
