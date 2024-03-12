@@ -91,9 +91,24 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   horizontal: 20.0),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text('Contact', style: TextStyle(color: AppConstant.appTextColor),),
+                title: Text('Contact Us', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: Icon(Icons.help, color: AppConstant.appTextColor),
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0),
+              child: ListTile(
+                titleAlignment: ListTileTitleAlignment.center,
+                title: Text('Terms And Conditions', style: TextStyle(color: AppConstant.appTextColor),),
+                leading: Icon(Icons.gavel_outlined, color: AppConstant.appTextColor),
+                trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                onTap: (){
+                  Get.back();
+                  Get.to(()=> AllOrdersScreen());
+                },
               ),
             ),
 
