@@ -6,7 +6,6 @@ import 'package:electro_rent/utils/app_constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_card/image_card.dart';
 
 class AllProductsWidget extends StatelessWidget {
   const AllProductsWidget({Key? key});

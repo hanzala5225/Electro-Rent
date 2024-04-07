@@ -102,6 +102,44 @@ class _AllOrdersScreen extends State<AllOrdersScreen> {
                   // CALCULATING PRICE
                   productPriceController.fetchProductPrice();
 
+                  // return SwipeActionCell(
+                  //   key: ObjectKey(orderModel.productId),
+                  //   trailingActions: [
+                  //     SwipeAction(
+                  //       title: "Delete",
+                  //       forceAlignmentToBoundary: true,
+                  //       performsFirstActionWithFullSwipe: true,
+                  //       onTap: (CompletionHandler handler) async {
+                  //         if (orderModel.status == true) {
+                  //           // Order is delivered, allow deletion
+                  //           await FirebaseFirestore.instance
+                  //               .collection('cart')
+                  //               .doc(user!.uid)
+                  //               .collection('cartOrders')
+                  //               .doc(orderModel.productId)
+                  //               .delete();
+                  //
+                  //           // Show a message indicating that the order has been deleted
+                  //           Get.snackbar(
+                  //             'Order Deleted',
+                  //             'Order has been deleted from history..',
+                  //             snackPosition: SnackPosition.BOTTOM,
+                  //             backgroundColor: Colors.red,
+                  //             colorText: Colors.white,
+                  //           );
+                  //         } else {
+                  //           Get.snackbar(
+                  //             'Order Can Not Be Deleted',
+                  //             'Order can not be deleted until it has been delivered. If you wish to cancel the order kindly contact us on our email..',
+                  //             snackPosition: SnackPosition.BOTTOM,
+                  //             backgroundColor: Colors.red,
+                  //             colorText: Colors.white,
+                  //           );
+                  //         }
+                  //       },
+                  //     ),
+                  //   ],
+
                   return Card(
                     elevation: 5,
                     color: AppConstant.appTextColor,

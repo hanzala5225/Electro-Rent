@@ -114,6 +114,7 @@ class _CartScreenState extends State<CartScreen> {
                           },
                         ),
                       ],
+
                       child: Card(
                         elevation: 5,
                         color: AppConstant.appTextColor,
@@ -168,22 +169,22 @@ class _CartScreenState extends State<CartScreen> {
                                         });
                                       }
                                     },
-                                    child: CircleAvatar(
+                                    child: const CircleAvatar(
                                       radius: 14.0,
                                       backgroundColor: AppConstant.appMainColor,
                                       child: Text('-', style: TextStyle(color: AppConstant.appTextColor)),
                                     ),
                                   ),
 
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Text(
                                     productQuantity.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16.0,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   GestureDetector(
                                     onTap: () async {
                                       if (cartModel.productQuantity > 0) {
@@ -199,7 +200,7 @@ class _CartScreenState extends State<CartScreen> {
                                         });
                                       }
                                     },
-                                    child: CircleAvatar(
+                                    child: const CircleAvatar(
                                       radius: 14.0,
                                       backgroundColor: AppConstant.appMainColor,
                                       child: Text('+', style: TextStyle(color: AppConstant.appTextColor)),
@@ -226,7 +227,7 @@ class _CartScreenState extends State<CartScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("    Total :", style: TextStyle(
+                const Text("    Total :", style: TextStyle(
                     color: AppConstant.appMainColor,
                     fontWeight: FontWeight.bold),
                 ),
@@ -234,7 +235,7 @@ class _CartScreenState extends State<CartScreen> {
                   double totalPrice = productPriceController.totalPrice.value;
                   return Text(
                     "${totalPrice.toStringAsFixed(1)} : PKR",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   );
                  },
                 ),
@@ -250,16 +251,28 @@ class _CartScreenState extends State<CartScreen> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: TextButton.icon(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.shopping_cart_checkout_sharp,
                           color: AppConstant.appTextColor,
                         ),
-                        label: Text('CheckOut!!',
+                        label: const Text('CheckOut!!',
                           style: TextStyle(
                               color: AppConstant.appTextColor),
                         ),
+
                         onPressed: () {
-                          Get.to(()=> CheckOutScreen());
+                          if (productPriceController.totalPrice.value == 0) {
+                            Get.snackbar(
+                              'Error',
+                              'Cart is empty.. Please add some product in cart before checking out..',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: AppConstant.appMainColor,
+                              colorText: Colors.white,
+                            );
+                          }
+                          else {
+                            Get.to(() => const CheckOutScreen());
+                          }
                         },
                       ),
                     ),
