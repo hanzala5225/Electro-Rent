@@ -44,7 +44,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             // Products Images
@@ -209,7 +209,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(width: 20.0,),
 
                           // Add to Cart Button
@@ -315,6 +315,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       CartModel cartModel = CartModel(
         productId: widget.productModel.productId,
         categoryId: widget.productModel.categoryId,
+        numberOfWeeks: 1,
         productName: widget.productModel.productName,
         categoryName: widget.productModel.categoryName,
         salePrice: widget.productModel.salePrice,

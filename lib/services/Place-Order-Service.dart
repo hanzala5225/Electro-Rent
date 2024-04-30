@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/screens/user_panel/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,15 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../models/Order-Model.dart';
 import '../../services/Generate-Order-ID-Service.dart';
 import '../../utils/app_constant.dart';
+import '../utils/upload_image_to_firebase.dart';
 
 void placeOrder({
   required BuildContext context,
   required String customerName,
   required String customerPhone,
   required String customerAddress,
+  required File cnic,
+  required String cnicNumber,
   required String customerDeviceToken
 }) async {
   final user = FirebaseAuth.instance.currentUser;
@@ -23,9 +29,12 @@ void placeOrder({
 
   if(user != null){
     try{
+      String cnicUrl = await uploadXImage(XFile(cnic.path),
+          storageFolderName: 'users-cnic-storage');
+
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('cart')
-          .doc(user!.uid)
+          .doc(user.uid)
           .collection('cartOrders').get();
 
       List<QueryDocumentSnapshot> documents = querySnapshot.docs;
@@ -53,6 +62,8 @@ void placeOrder({
           productTotalPrice: double.parse(data['productTotalPrice'].toString(),),
           customerId: user.uid,
           status: false,
+          cnicNumber: cnicNumber,
+          cnincImage: cnicUrl,
           customerName: customerName,
           customerPhone: customerPhone,
           customerDeviceToken: customerDeviceToken,

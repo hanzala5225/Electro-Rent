@@ -12,11 +12,13 @@ class CartModel{
   final dynamic createdAt;
   final dynamic updatedAt;
   final int productQuantity;
+  final int numberOfWeeks;
   final double productTotalPrice;
 
 CartModel({
   required this.productId,
   required this.categoryId,
+  required this.numberOfWeeks,
   required this.productName,
   required this.categoryName,
   required this.salePrice,
@@ -35,6 +37,7 @@ CartModel({
     return {
       'productId': productId,
       'categoryId': categoryId,
+      'numberOfWeeks': numberOfWeeks,
       'productName': productName,
       'categoryName': categoryName,
       'salePrice': salePrice,
@@ -55,6 +58,7 @@ CartModel({
     return CartModel(
       productId: json['productId'],
       categoryId: json['categoryId'],
+      numberOfWeeks: json['numberOfWeeks'],
       productName: json['productName'],
       categoryName: json['categoryName'],
       salePrice: json['salePrice'],

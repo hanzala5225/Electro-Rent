@@ -72,6 +72,8 @@ class _AllOrdersScreen extends State<AllOrdersScreen> {
                   // model values
                   OrderModel orderModel = OrderModel(
                     productId: productData['productId'],
+                    cnincImage:  productData['cnincImage'],
+                    cnicNumber:  productData['cnicNumber'],
                     categoryId: productData['categoryId'],
                     productName: productData['productName'],
                     categoryName: productData['categoryName'],
