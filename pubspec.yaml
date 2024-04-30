@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: 3.3.0
+  sdk: '>=3.3.0 <4.0.0'
 
 
 # Dependencies specify other packages that your package needs in order to work.
@@ -42,11 +42,13 @@ dependencies:
   firebase_core: ^2.24.2
   google_sign_in: ^6.2.1
   firebase_auth: ^4.16.0
+  firebase_storage: ^11.7.4
   cloud_firestore: ^4.14.0
-  flutter_easyloading: ^3.0.5
   firebase_messaging: ^14.7.10
+  flutter_easyloading: ^3.0.5
   carousel_slider: ^4.2.1
   cached_network_image: ^3.3.1
+  image_picker: ^1.1.0
   image_card: ^0.0.4
   flutter_screenutil: ^5.9.0
   flutter_swipe_action_cell: ^3.1.3

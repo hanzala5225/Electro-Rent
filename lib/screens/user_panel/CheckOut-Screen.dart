@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/screens/user_panel/CheckOut-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
@@ -11,6 +13,9 @@ import '../../controllers/Cart-Price-Controller.dart';
 import '../../controllers/Get-Customer-Device-Token-Controller.dart';
 import '../../models/Cart-Model.dart';
 import '../../services/Place-Order-Service.dart';
+import '../../utils/validator.dart';
+import '../../widgets/custom_image_picker.dart';
+import 'Check-Out_Dialouge-Screen.dart';
 
 class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key});
@@ -28,6 +33,18 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController idNumber = TextEditingController();
+
+  File? selectedImage;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    idNumber.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +95,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   // model values
                   CartModel cartModel = CartModel(
                     productId: productData['productId'],
+                    numberOfWeeks: productData['numberOfWeeks'],
                     categoryId: productData['categoryId'],
                     productName: productData['productName'],
                     categoryName: productData['categoryName'],
@@ -195,6 +213,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     ),
                     onPressed: () {
                       showCustomBottomSheet();
+                      // Navigator.push(context, MaterialPageRoute(builder: (_)=> AppointmentRequestsScreen()));
                     },
                   ),
                 ),
@@ -207,149 +226,202 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   }
   void showCustomBottomSheet() {
     Get.bottomSheet(
-      Container(
-        height: Get.height * 0.8,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(16.0),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  'Place Your Order',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppConstant.appMainColor, // Match your app's primary color
-                  ),
-                ),
+      StatefulBuilder(
+        builder: (BuildContext context, void Function(void Function()) setState) {
+          return Container(
+            height: Get.height * 0.9,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(16.0),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: TextFormField(
-                  controller: nameController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.name,
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    labelText: "Name",
-                    labelStyle: TextStyle(color: Colors.black),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: TextFormField(
-                  controller: phoneController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.phone,
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    labelText: "Phone",
-                    labelStyle: TextStyle(color: Colors.black),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: TextFormField(
-                  controller: addressController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.streetAddress,
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    labelText: "Address",
-                    labelStyle: TextStyle(color: Colors.black),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-                  ),
-                ),
-              ),
-              SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppConstant.appMainColor, // Match your app's primary color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (nameController.text.isEmpty || phoneController.text.isEmpty || addressController.text.isEmpty) {
-                      Get.snackbar(
-                        'Error',
-                        'All fields are required.',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                    } else {
-                      String name = nameController.text.trim();
-                      String phone = phoneController.text.trim();
-                      String address = addressController.text.trim();
-                      String customerToken = await getCustomerDeviceToken();
-
-                      // Place Order Service
-                      placeOrder(
-                        context: context,
-                        customerName: name,
-                        customerPhone: phone,
-                        customerAddress: address,
-                        customerDeviceToken: customerToken,
-                      );
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
                     child: Text(
-                      "Place Your Order",
+                      'Place Your Order',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        color: AppConstant.appMainColor, // Match your app's primary color
                       ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextFormField(
+                      controller: nameController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.name,
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "Name",
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextFormField(
+                      controller: phoneController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.phone,
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "Phone",
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextFormField(
+                      controller: addressController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.streetAddress,
+                      style: TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "Address",
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextFormField(
+                      controller: idNumber,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(color: Colors.black),
+                      validator: cnicValidator,
+                      decoration: InputDecoration(
+                        labelText: "CNIC",
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  CommonProfileImage(
+                    onTap: ()async {
+                      var imageFile = await ImagePicker.platform
+                          .getImageFromSource(source: ImageSource.gallery);
+                      if (imageFile == null) return;
+                      File tmpFile = File(imageFile.path);
+                      setState(() {
+                        selectedImage = tmpFile;
+                        print('Path: ${selectedImage?.path}');
+                      });
+
+                    },
+                    imageFile: selectedImage,
+                  ),
+
+                  SizedBox(height: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppConstant.appMainColor, // Match your app's primary color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (
+                        nameController.text.isEmpty ||
+                            phoneController.text.isEmpty ||
+                            addressController.text.isEmpty ||
+                            idNumber.text.isEmpty ||
+                            selectedImage == null
+                        ) {
+                          Get.snackbar(
+                            'Error',
+                            'All fields are required.',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        } else {
+                          String name = nameController.text.trim();
+                          String phone = phoneController.text.trim();
+                          String address = addressController.text.trim();
+                          String id = idNumber.text.trim();
+                          String customerToken = await getCustomerDeviceToken();
+
+                          // Place Order Service
+                          placeOrder(
+                            context: context,
+                            customerName: name,
+                            customerPhone: phone,
+                            customerAddress: address,
+                            cnic: selectedImage!,
+                            cnicNumber: id,
+                            customerDeviceToken: customerToken,
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          "Place Your Order",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
       backgroundColor: Colors.transparent,
       isDismissible: true,
@@ -357,5 +429,4 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       elevation: 6,
     );
   }
-
 }

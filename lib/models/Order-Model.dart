@@ -1,5 +1,7 @@
 class OrderModel {
   final String productId;
+  final String cnicNumber;
+  final String cnincImage;
   final String categoryId;
   final String productName;
   final String categoryName;
@@ -23,6 +25,8 @@ class OrderModel {
   OrderModel({
     required this.productId,
     required this.categoryId,
+    required this.cnicNumber,
+    required this.cnincImage,
     required this.productName,
     required this.categoryName,
     required this.salePrice,
@@ -48,6 +52,8 @@ class OrderModel {
     return {
       'productId': productId,
       'categoryId': categoryId,
+      'cnicNumber': cnicNumber,
+      'cnincImage': cnincImage,
       'productName': productName,
       'categoryName': categoryName,
       'salePrice': salePrice,
@@ -73,6 +79,8 @@ class OrderModel {
   factory OrderModel.fromMap(Map<String, dynamic> json){
     return OrderModel(
       productId: json['productId'],
+      cnicNumber: json['cnicNumber'],
+      cnincImage: json['cnincImage'],
       categoryId: json['categoryId'],
       productName: json['productName'],
       categoryName: json['categoryName'],
