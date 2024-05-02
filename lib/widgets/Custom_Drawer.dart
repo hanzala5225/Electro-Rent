@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../controllers/Get_User_Data_Controller.dart';
 import '../screens/user_panel/Contact-Us-Screen.dart';
 import '../screens/user_panel/Terms-And-Condition-Screen.dart';
 
@@ -18,6 +19,30 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+
+  Map<String, dynamic>? userDataMap;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initiallize();
+  }
+
+  initiallize(){
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      final GetUserDataController getUserDataController = Get.put(GetUserDataController());
+      User? user = FirebaseAuth.instance.currentUser;
+      if(user!= null){
+        var userData = await getUserDataController.getUserData(user.uid);
+        userDataMap = userData[0].data() as Map<String, dynamic>?;
+        setState(() {
+        });
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(padding: EdgeInsets.only(top: Get.height / 25),
@@ -36,12 +61,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text('Hanzala', style: TextStyle(color: AppConstant.appTextColor),),
+                title: Text('${userDataMap?['username'] ?? 'Unknown'}', style: TextStyle(color: AppConstant.appTextColor),),
                 subtitle: Text('Version: 1.0.1', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: CircleAvatar(
                   radius: 22.0,
                   backgroundColor: AppConstant.appMainColor,
-                  child: Text('H', style: TextStyle(color: AppConstant.appTextColor),),
+                  child: userDataMap?['userImg'] == null || userDataMap?['userImg'] == '' ?
+                  Text('H', style: TextStyle(color: AppConstant.appTextColor),):
+                  Image.network(userDataMap?['username'][0]),
+
                 ),
               ),
             ),
