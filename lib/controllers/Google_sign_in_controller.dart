@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/controllers/Device_Token_Controller.dart';
 import 'package:electro_rent/models/user_models.dart';
