@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../utils/app_constant.dart';
+
 class GoogleSignInController extends GetxController{
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -39,7 +41,7 @@ class GoogleSignInController extends GetxController{
             UserModel userModel= UserModel(
                 uId: user.uid,
                 username: user.displayName.toString(),
-                email: user.emailVerified.toString(),
+                email: user.email.toString(),
                 phone: user.phoneNumber.toString(),
                 userImg: user.photoURL.toString(),
                 userDeviceToken: deviceTokenController.deviceToken.toString(),
@@ -59,8 +61,13 @@ class GoogleSignInController extends GetxController{
 
             EasyLoading.dismiss();
 
-
             Get.offAll(()=> const MainScreen());
+
+            Get.snackbar("SUCCESS USER LOGIN", "LOGIN SUCCESSFULLY...",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppConstant.appSecondaryColor,
+              colorText: AppConstant.appTextColor,
+            );
           }
         }
     }
