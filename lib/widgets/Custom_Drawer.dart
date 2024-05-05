@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:electro_rent/screens/auth_ui/welcome_screen.dart';
 import 'package:electro_rent/screens/user_panel/All-Orders-Screen.dart';
+import 'package:electro_rent/screens/user_panel/main_screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../controllers/Get_User_Data_Controller.dart';
+import '../screens/user_panel/All-Products-Screen.dart';
 import '../screens/user_panel/Contact-Us-Screen.dart';
 import '../screens/user_panel/Terms-And-Condition-Screen.dart';
 
@@ -68,11 +70,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   backgroundColor: AppConstant.appMainColor,
                   child: userDataMap?['userImg'] == null || userDataMap?['userImg'] == '' ?
                   const Text('H', style: TextStyle(color: AppConstant.appTextColor),) :
-                  CachedNetworkImage(
-                    imageUrl: userDataMap?['userImg'],
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                    fit: BoxFit.cover,
+                  ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: userDataMap?['userImg'],
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -92,6 +96,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 title: Text('Home', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: Icon(Icons.home, color: AppConstant.appTextColor),
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                onTap: (){
+                  Get.back();
+                  Get.to(()=> MainScreen());
+                },
               ),
             ),
 
@@ -103,6 +111,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 title: Text('Products', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: Icon(Icons.production_quantity_limits, color: AppConstant.appTextColor),
                 trailing: Icon(Icons.arrow_forward, color: AppConstant.appTextColor),
+                onTap: (){
+                  Get.back();
+                  Get.to(()=> AllProductsScreen());
+                },
               ),
             ),
 
