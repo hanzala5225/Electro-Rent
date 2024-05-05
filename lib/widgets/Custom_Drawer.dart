@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:electro_rent/screens/auth_ui/welcome_screen.dart';
 import 'package:electro_rent/screens/user_panel/All-Orders-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../controllers/Get_User_Data_Controller.dart';
 import '../screens/user_panel/Contact-Us-Screen.dart';
 import '../screens/user_panel/Terms-And-Condition-Screen.dart';
@@ -61,15 +61,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: ListTile(
                 titleAlignment: ListTileTitleAlignment.center,
-                title: Text('${userDataMap?['username'] ?? 'Unknown'}', style: TextStyle(color: AppConstant.appTextColor),),
-                subtitle: Text('Version: 1.0.1', style: TextStyle(color: AppConstant.appTextColor),),
+                title: Text('${userDataMap?['username'] ?? 'Loading...'}', style: TextStyle(color: AppConstant.appTextColor),),
+                subtitle: Text('Version: 1.0.5', style: TextStyle(color: AppConstant.appTextColor),),
                 leading: CircleAvatar(
                   radius: 22.0,
                   backgroundColor: AppConstant.appMainColor,
                   child: userDataMap?['userImg'] == null || userDataMap?['userImg'] == '' ?
-                  Text('H', style: TextStyle(color: AppConstant.appTextColor),):
-                  Image.network(userDataMap?['username'][0]),
-
+                  const Text('H', style: TextStyle(color: AppConstant.appTextColor),) :
+                  CachedNetworkImage(
+                    imageUrl: userDataMap?['userImg'],
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

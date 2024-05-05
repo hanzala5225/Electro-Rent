@@ -18,7 +18,7 @@ import '../../widgets/custom_image_picker.dart';
 import 'Check-Out_Dialouge-Screen.dart';
 
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({super.key});
+  const CheckOutScreen({Key? key});
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -52,21 +52,19 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       appBar: AppBar(
         backgroundColor: AppConstant.appMainColor,
         iconTheme: IconThemeData(color: AppConstant.appTextColor),
-        title: Text('Check Out Screen..',
+        title: Text(
+          'Check Out Screen..',
           style: TextStyle(color: AppConstant.appTextColor),
         ),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore
-            .instance.collection('cart')
-            .doc(user!.uid).collection('cartOrders')
-            .snapshots(),
-
+        stream: FirebaseFirestore.instance.collection('cart').doc(user!.uid).collection('cartOrders').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
           if(snapshot.hasError){
             return Center(
               child: Text(
-                  "Error!"),
+                "Error!",
+              ),
             );
           }
           if(snapshot.connectionState == ConnectionState.waiting){
@@ -80,7 +78,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           if(snapshot.data!.docs.isEmpty){
             return Center(
               child: Text(
-                  "No products Found In The App!!"),
+                "No products Found In The App!!",
+              ),
             );
           }
           if(snapshot.data != null){
@@ -110,7 +109,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     productQuantity: productData['productQuantity'],
                     productTotalPrice: productData['productTotalPrice'],
                   );
-
 
                   // Extracting product details from Firestore snapshot
                   String productName = productData['productName'];
@@ -167,10 +165,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   );
                 },
               ),
-
             );
           }
-
           return Container();
         },
       ),
@@ -179,9 +175,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("    Total :", style: TextStyle(
-                color: AppConstant.appMainColor,
-                fontWeight: FontWeight.bold),
+            Text(
+              "Total :",
+              style: TextStyle(color: AppConstant.appMainColor, fontWeight: FontWeight.bold),
             ),
             Obx(() {
               double totalPrice = productPriceController.totalPrice.value;
@@ -189,9 +185,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 "${totalPrice.toStringAsFixed(1)} : PKR",
                 style: TextStyle(fontWeight: FontWeight.bold),
               );
-            },
-            ),
-
+            }),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Material(
@@ -207,13 +201,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       Icons.shopping_bag,
                       color: AppConstant.appTextColor,
                     ),
-                    label: Text('CheckOut!!',
-                      style: TextStyle(
-                          color: AppConstant.appTextColor),
+                    label: Text(
+                      'CheckOut!!',
+                      style: TextStyle(color: AppConstant.appTextColor),
                     ),
                     onPressed: () {
                       showCustomBottomSheet();
-                      // Navigator.push(context, MaterialPageRoute(builder: (_)=> AppointmentRequestsScreen()));
                     },
                   ),
                 ),
@@ -224,6 +217,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       ),
     );
   }
+
   void showCustomBottomSheet() {
     Get.bottomSheet(
       StatefulBuilder(
@@ -261,13 +255,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Name",
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.red),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -284,13 +278,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Phone",
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.red),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -307,13 +301,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Address",
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.red),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -331,13 +325,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       validator: cnicValidator,
                       decoration: InputDecoration(
                         labelText: "CNIC",
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.red),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -345,19 +339,67 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  CommonProfileImage(
-                    onTap: ()async {
-                      var imageFile = await ImagePicker.platform
-                          .getImageFromSource(source: ImageSource.gallery);
-                      if (imageFile == null) return;
-                      File tmpFile = File(imageFile.path);
-                      setState(() {
-                        selectedImage = tmpFile;
-                        print('Path: ${selectedImage?.path}');
-                      });
-
-                    },
-                    imageFile: selectedImage,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "Add your CNIC image",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppConstant.appMainColor,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Purpose of CNIC Image", style: TextStyle(color: AppConstant.appMainColor),),
+                                  content: Text(
+                                    "The CNIC image will be used to verify your identity during product delivery for security purposes.",
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('OK', style: TextStyle(color: AppConstant.appMainColor),),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Icon(
+                            Icons.info_outline,
+                            color: Colors.red, // Set button color to red
+                            size: 24.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: CommonProfileImage(
+                      onTap: () async {
+                        var imageFile = await ImagePicker.platform.getImage(source: ImageSource.gallery);
+                        if (imageFile == null) return;
+                        File tmpFile = File(imageFile.path);
+                        setState(() {
+                          selectedImage = tmpFile;
+                          print('Path: ${selectedImage?.path}');
+                        });
+                      },
+                      imageFile: selectedImage,
+                    ),
                   ),
 
                   SizedBox(height: 40),
@@ -371,13 +413,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         ),
                       ),
                       onPressed: () async {
-                        if (
-                        nameController.text.isEmpty ||
+                        if (nameController.text.isEmpty ||
                             phoneController.text.isEmpty ||
                             addressController.text.isEmpty ||
                             idNumber.text.isEmpty ||
-                            selectedImage == null
-                        ) {
+                            selectedImage == null) {
                           Get.snackbar(
                             'Error',
                             'All fields are required.',
