@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/screens/user_panel/CheckOut-Screen.dart';
@@ -175,9 +176,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Total :",
-              style: TextStyle(color: AppConstant.appMainColor, fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Text(
+                "Total :",
+                style: TextStyle(color: AppConstant.appMainColor, fontWeight: FontWeight.bold),
+              ),
             ),
             Obx(() {
               double totalPrice = productPriceController.totalPrice.value;
@@ -255,13 +259,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Name",
-                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
+                        labelStyle: TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
+                          borderSide: BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -278,13 +282,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Phone",
-                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
+                        labelStyle: TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
+                          borderSide: BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -301,13 +305,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Address",
-                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
+                        labelStyle: TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
+                          borderSide: BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -325,13 +329,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       validator: cnicValidator,
                       decoration: InputDecoration(
                         labelText: "CNIC",
-                        labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
+                        labelStyle: TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
+                          borderSide: BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -344,14 +348,24 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            "Add your CNIC image",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppConstant.appMainColor,
-                            ),
+                          child: AnimatedTextKit(
+                            animatedTexts: [
+                              ColorizeAnimatedText(
+                                "Add your CNIC image",
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                colors: [
+                                  AppConstant.appMainColor,
+                                  Colors.purple,
+                                  Colors.blue,
+                                  Colors.yellow,
+                                  Colors.pink,
+                                ],
+                              ),
+                            ],
+                            isRepeatingAnimation: true,
                           ),
                         ),
                         GestureDetector(
@@ -360,7 +374,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Purpose of CNIC Image", style: TextStyle(color: AppConstant.appMainColor),),
+                                  title: Text(
+                                    "Purpose of CNIC Image",
+                                    style: TextStyle(color: AppConstant.appMainColor),
+                                  ),
                                   content: Text(
                                     "The CNIC image will be used to verify your identity during product delivery for security purposes.",
                                   ),
@@ -369,7 +386,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('OK', style: TextStyle(color: AppConstant.appMainColor),),
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(color: AppConstant.appMainColor),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -378,13 +398,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           },
                           child: Icon(
                             Icons.info_outline,
-                            color: Colors.red, // Set button color to red
+                            color: AppConstant.appMainColor,
                             size: 24.0,
                           ),
                         ),
                       ],
                     ),
                   ),
+
                   SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),

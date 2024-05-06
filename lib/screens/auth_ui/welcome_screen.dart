@@ -59,7 +59,6 @@ class WelcomeScreen extends StatelessWidget {
                         color: AppConstant.appTextColor),
                   ),
 
-
                   onPressed: () {
                     _googleSignInController.signInWithGoogle();
                   },
