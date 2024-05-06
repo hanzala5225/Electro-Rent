@@ -93,10 +93,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           onTap: (){
                             signInController.isPasswordVisible.toggle();
                           },
-
                             child:signInController.isPasswordVisible.value?
-                            const Icon(Icons.visibility_off) :
-                            const Icon(Icons.visibility)
+                            const Icon(Icons.visibility) :
+                            const Icon(Icons.visibility_off)
                         ),
 
                         contentPadding: const EdgeInsets.only(top: 2.0, left: 8.0),

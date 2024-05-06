@@ -123,8 +123,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             SizedBox(width: 16),
                             Text(
                               widget.productModel.isSale && widget.productModel.salePrice.isNotEmpty
-                                  ? widget.productModel.salePrice.toString() + " PKR"
-                                  : widget.productModel.rentPrice.toString() + " PKR",
+                                  ? widget.productModel.salePrice.toString() + " PKR   per week"
+                                  : widget.productModel.rentPrice.toString() + " PKR   per week",
                             ),
                           ],
                         ),
@@ -186,7 +186,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           Material(
                             borderRadius: BorderRadius.circular(20.0),
                             child: Container(
-                              width: Get.width / 2.8,
+                              width: Get.width / 2.7,
                               height: Get.height / 16,
                               decoration: BoxDecoration(
                                 color: AppConstant.appSecondaryColor,
@@ -210,13 +210,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             ),
                           ),
 
-                          const SizedBox(width: 20.0,),
+                          const SizedBox(width: 13.0,),
 
                           // Add to Cart Button
                           Material(
                             borderRadius: BorderRadius.circular(20.0),
                             child: Container(
-                              width: Get.width / 2.8,
+                              width: Get.width / 2.7,
                               height: Get.height / 16,
                               decoration: BoxDecoration(
                                 color: AppConstant.appSecondaryColor,
@@ -228,7 +228,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   color: AppConstant.appTextColor,
                                 ),
                                 label: Text(
-                                  'Add To Cart!',
+                                  'Add To Cart',
                                   style: TextStyle(color: AppConstant.appTextColor),
                                 ),
                                 onPressed: () async {

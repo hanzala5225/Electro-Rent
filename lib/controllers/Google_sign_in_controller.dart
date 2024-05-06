@@ -38,20 +38,20 @@ class GoogleSignInController extends GetxController{
           final User? user = userCredential.user;
 
           if(user != null){
-            UserModel userModel= UserModel(
-                uId: user.uid,
-                username: user.displayName.toString(),
-                email: user.email.toString(),
-                phone: user.phoneNumber.toString(),
-                userImg: user.photoURL.toString(),
-                userDeviceToken: deviceTokenController.deviceToken.toString(),
-                country: '',
-                userAddress: '',
-                street: '',
-                isAdmin: false,
-                isActive: true,
-                createdOn: DateTime.now(),
-                city: '',
+            UserModel userModel = UserModel(
+              uId: user.uid,
+              username: user.displayName.toString(),
+              email: user.email.toString(),
+              phone: user.phoneNumber.toString(),
+              userImg: user.photoURL.toString(),
+              userDeviceToken: deviceTokenController.deviceToken.toString(),
+              country: '',
+              userAddress: '',
+              street: '',
+              isAdmin: false,
+              isActive: true,
+              createdOn: DateTime.now(),
+              city: '',
             );
 
             await FirebaseFirestore.instance
@@ -60,14 +60,7 @@ class GoogleSignInController extends GetxController{
                 .set(userModel.toMap());
 
             EasyLoading.dismiss();
-
             Get.offAll(()=> const MainScreen());
-
-            Get.snackbar("SUCCESS USER LOGIN", "LOGIN SUCCESSFULLY...",
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: AppConstant.appSecondaryColor,
-              colorText: AppConstant.appTextColor,
-            );
           }
         }
     }
