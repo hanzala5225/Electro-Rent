@@ -21,8 +21,8 @@ class ProductPriceController extends GetxController {
   }
 
   Future<void> fetchProductPrice() async {
-    final QuerySnapshot<Map<String, dynamic>> snapshot =
-    await FirebaseFirestore.instance
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
         .collection('cart')
         .doc(user!.uid)
         .collection('cartOrders')
@@ -37,5 +37,31 @@ class ProductPriceController extends GetxController {
       }
     }
     totalPrice.value = sum;
+  }
+
+ 
+
+  Future<int> fetchNumberofWeeks() async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('cart')
+        .doc(user!.uid)
+        .collection('cartOrders')
+        .get();
+
+    int sum = 0;
+
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+      if (data != null && data.containsKey('numberOfWeeks')) {
+        sum += data['numberOfWeeks'] as int;
+      }
+    }
+    return sum;
+  }
+
+  void updateNumberOfWeek(int numberOfWeek) {
+    numberOfWeek++;
+    update();
   }
 }

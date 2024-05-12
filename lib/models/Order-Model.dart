@@ -8,6 +8,7 @@ class OrderModel {
   final String salePrice;
   final String rentPrice;
   final String deliveryTime;
+  final dynamic returnTime;
   final bool isSale;
   final List productImages;
   final String productDescription;
@@ -21,6 +22,7 @@ class OrderModel {
   final String customerPhone;
   final String customerAddress;
   final String customerDeviceToken;
+  final int numberOfWeeks;
 
   OrderModel({
     required this.productId,
@@ -32,6 +34,7 @@ class OrderModel {
     required this.salePrice,
     required this.rentPrice,
     required this.deliveryTime,
+    required this.returnTime,
     required this.isSale,
     required this.productImages,
     required this.productDescription,
@@ -45,10 +48,10 @@ class OrderModel {
     required this.customerPhone,
     required this.customerAddress,
     required this.customerDeviceToken,
-
+    required this.numberOfWeeks,
   });
 
-  Map<String, dynamic> toMap(){
+  Map<String, dynamic> toMap() {
     return {
       'productId': productId,
       'categoryId': categoryId,
@@ -59,6 +62,7 @@ class OrderModel {
       'salePrice': salePrice,
       'rentPrice': rentPrice,
       'deliveryTime': deliveryTime,
+      'returnTime': returnTime,
       'isSale': isSale,
       'productImages': productImages,
       'productDescription': productDescription,
@@ -76,7 +80,7 @@ class OrderModel {
   }
 
   // creating a UserModel instance from a JSON map
-  factory OrderModel.fromMap(Map<String, dynamic> json){
+  factory OrderModel.fromMap(Map<String, dynamic> json) {
     return OrderModel(
       productId: json['productId'],
       cnicNumber: json['cnicNumber'],
@@ -87,6 +91,7 @@ class OrderModel {
       salePrice: json['salePrice'],
       rentPrice: json['rentPrice'],
       deliveryTime: json['deliveryTime'],
+      returnTime: json['returnTime'],
       isSale: json['isSale'],
       productImages: json['productImages'],
       productDescription: json['productDescription'],
@@ -100,6 +105,7 @@ class OrderModel {
       customerPhone: json['customerPhone'],
       customerAddress: json['customerAddress'],
       customerDeviceToken: json['customerDeviceToken'],
+      numberOfWeeks: json['numberOfWeeks'],
     );
   }
 }

@@ -6,6 +6,7 @@ class CartModel{
   final String salePrice;
   final String rentPrice;
   final String deliveryTime;
+  final DateTime returnTime;
   final bool isSale;
   final List productImages;
   final String productDescription;
@@ -24,6 +25,7 @@ CartModel({
   required this.salePrice,
   required this.rentPrice,
   required this.deliveryTime,
+  required this.returnTime,
   required this.isSale,
   required this.productImages,
   required this.productDescription,
@@ -43,6 +45,7 @@ CartModel({
       'salePrice': salePrice,
       'rentPrice': rentPrice,
       'deliveryTime': deliveryTime,
+      'returnTime': returnTime,
       'isSale': isSale,
       'productImages': productImages,
       'productDescription': productDescription,
@@ -64,6 +67,7 @@ CartModel({
       salePrice: json['salePrice'],
       rentPrice: json['rentPrice'],
       deliveryTime: json['deliveryTime'],
+      returnTime: json['returnTime'],
       isSale: json['isSale'],
       productImages: json['productImages'],
       productDescription: json['productDescription'],

@@ -1,14 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:electro_rent/screens/user_panel/CheckOut-Screen.dart';
+import 'package:electro_rent/services/Place-Order-Service.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 import '../../controllers/Cart-Price-Controller.dart';
-import '../../models/Cart-Model.dart';
 import '../../models/Order-Model.dart';
 
 class AllOrdersScreen extends StatefulWidget {
@@ -20,176 +17,284 @@ class AllOrdersScreen extends StatefulWidget {
 
 class _AllOrdersScreen extends State<AllOrdersScreen> {
   // CART PRICE CONTROLLER
-  final ProductPriceController productPriceController = Get.put(ProductPriceController());
+  final ProductPriceController productPriceController =
+      Get.put(ProductPriceController());
 
   User? user = FirebaseAuth.instance.currentUser;
+  int numberOfWeeks = 0;
+  double totalPrice = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppConstant.appMainColor,
-        iconTheme: IconThemeData(color: AppConstant.appTextColor),
-        title: Text('All Orders',
+        iconTheme: const IconThemeData(color: AppConstant.appTextColor),
+        title: const Text(
+          'All Orders',
           style: TextStyle(color: AppConstant.appTextColor),
         ),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore
-            .instance.collection('orders')
-            .doc(user!.uid).collection('confirmOrders')
+        stream: FirebaseFirestore.instance
+            .collection('orders')
+            .doc(user!.uid)
+            .collection('confirmOrders')
             .snapshots(),
-
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-          if(snapshot.hasError){
-            return Center(
-              child: Text(
-                  "Error!"),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
+          // if (snapshot.connectionState == ConnectionState.waiting) {
+          //   return SizedBox(
+          //     height: Get.height / 5,
+          //     child: const Center(
+          //       child: CupertinoActivityIndicator(),
+          //     ),
+          //   );
+          // }
+          if (snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text("No orders Found In The App!!"),
             );
           }
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return Container(
-              height: Get.height / 5,
-              child: Center(
-                child: CupertinoActivityIndicator(),
-              ),
-            );
-          }
-          if(snapshot.data!.docs.isEmpty){
-            return Center(
-              child: Text(
-                  "No orders Found In The App!!"),
-            );
-          }
-          if(snapshot.data != null){
-            return Container(
-              child: ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final productData = snapshot.data!.docs[index];
+          if (snapshot.data != null) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                OrderModel orderModel = OrderModel.fromMap(
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>);
+                // CALCULATING PRICE
+                productPriceController.fetchProductPrice();
 
-                  // model values
-                  OrderModel orderModel = OrderModel(
-                    productId: productData['productId'],
-                    cnincImage:  productData['cnincImage'],
-                    cnicNumber:  productData['cnicNumber'],
-                    categoryId: productData['categoryId'],
-                    productName: productData['productName'],
-                    categoryName: productData['categoryName'],
-                    salePrice: productData['salePrice'],
-                    rentPrice: productData['rentPrice'],
-                    deliveryTime: productData['deliveryTime'],
-                    isSale: productData['isSale'],
-                    productImages: productData['productImages'],
-                    productDescription: productData['productDescription'],
-                    createdAt: DateTime.now(),
-                    updatedAt: productData['updatedAt'],
-                    productQuantity: productData['productQuantity'],
-                    productTotalPrice: double.parse(productData['productTotalPrice'].toString(),),
-                    customerId: productData['customerId'],
-                    status: productData['status'],
-                    customerName: productData['customerName'],
-                    customerPhone: productData['customerPhone'],
-                    customerDeviceToken: productData['customerDeviceToken'],
-                    customerAddress: productData['customerAddress'],
-                  );
+                // return SwipeActionCell(
+                //   key: ObjectKey(orderModel.productId),
+                //   trailingActions: [
+                //     SwipeAction(
+                //       title: "Delete",
+                //       forceAlignmentToBoundary: true,
+                //       performsFirstActionWithFullSwipe: true,
+                //       onTap: (CompletionHandler handler) async {
+                //         if (orderModel.status == true) {
+                //           // Order is delivered, allow deletion
+                //           await FirebaseFirestore.instance
+                //               .collection('cart')
+                //               .doc(user!.uid)
+                //               .collection('cartOrders')
+                //               .doc(orderModel.productId)
+                //               .delete();
+                //
+                //           // Show a message indicating that the order has been deleted
+                //           Get.snackbar(
+                //             'Order Deleted',
+                //             'Order has been deleted from history..',
+                //             snackPosition: SnackPosition.BOTTOM,
+                //             backgroundColor: Colors.red,
+                //             colorText: Colors.white,
+                //           );
+                //         } else {
+                //           Get.snackbar(
+                //             'Order Can Not Be Deleted',
+                //             'Order can not be deleted until it has been delivered. If you wish to cancel the order kindly contact us on our email..',
+                //             snackPosition: SnackPosition.BOTTOM,
+                //             backgroundColor: Colors.red,
+                //             colorText: Colors.white,
+                //           );
+                //         }
+                //       },
+                //     ),
+                //   ],
+                Timestamp timestamp = orderModel.returnTime;
+                DateTime dateTime = timestamp.toDate();
+                DateTime now = DateTime.now();
+                Duration returnTime = dateTime.difference(now);
 
-                  // Extracting product details from Firestore snapshot
-                  String productName = productData['productName'];
-                  double productTotalPrice = productData['productTotalPrice'];
-                  int productQuantity = productData['productQuantity'];
-                  List<String> productImages = List<String>.from(productData['productImages']);
-
-                  // CALCULATING PRICE
-                  productPriceController.fetchProductPrice();
-
-                  // return SwipeActionCell(
-                  //   key: ObjectKey(orderModel.productId),
-                  //   trailingActions: [
-                  //     SwipeAction(
-                  //       title: "Delete",
-                  //       forceAlignmentToBoundary: true,
-                  //       performsFirstActionWithFullSwipe: true,
-                  //       onTap: (CompletionHandler handler) async {
-                  //         if (orderModel.status == true) {
-                  //           // Order is delivered, allow deletion
-                  //           await FirebaseFirestore.instance
-                  //               .collection('cart')
-                  //               .doc(user!.uid)
-                  //               .collection('cartOrders')
-                  //               .doc(orderModel.productId)
-                  //               .delete();
-                  //
-                  //           // Show a message indicating that the order has been deleted
-                  //           Get.snackbar(
-                  //             'Order Deleted',
-                  //             'Order has been deleted from history..',
-                  //             snackPosition: SnackPosition.BOTTOM,
-                  //             backgroundColor: Colors.red,
-                  //             colorText: Colors.white,
-                  //           );
-                  //         } else {
-                  //           Get.snackbar(
-                  //             'Order Can Not Be Deleted',
-                  //             'Order can not be deleted until it has been delivered. If you wish to cancel the order kindly contact us on our email..',
-                  //             snackPosition: SnackPosition.BOTTOM,
-                  //             backgroundColor: Colors.red,
-                  //             colorText: Colors.white,
-                  //           );
-                  //         }
-                  //       },
-                  //     ),
-                  //   ],
-
-                  return Card(
-                    elevation: 5,
-                    color: AppConstant.appTextColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          image: DecorationImage(
-                            image: NetworkImage(productImages.isNotEmpty ? productImages[0] : ''),
-                            fit: BoxFit.cover,
-                          ),
+                return Card(
+                  elevation: 5,
+                  color: AppConstant.appTextColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: ListTile(
+                    leading: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              orderModel.productImages[0].toString()),
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      title: Text(
-                        productName,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 5),
-                          Text(
-                            'Total Price: PKR: ${productTotalPrice.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          SizedBox(width: 11.0,),
-
-                          orderModel.status != true?
-                          Text("Pending..", style: TextStyle(color: Colors.green),):
-                          Text("Delivered.!", style: TextStyle(color: Colors.red),)
-                        ],
-                      ),
                     ),
-                  );
-                },
-              ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        orderModel.status == false
+                            ? const SizedBox.shrink()
+                            : SlideCountdown(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                duration: returnTime,
+                                slideDirection: SlideDirection.down,
+                                separator: ":",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                        Text(
+                          orderModel.productName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 5),
+                        Text(
+                          'Total Price: PKR: ${returnTime.inHours < 24 && totalPrice != 0 ? totalPrice : orderModel.productTotalPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 11.0,
+                        ),
+                        orderModel.status != true
+                            ? const Text(
+                                "Pending..",
+                                style: TextStyle(color: Colors.green),
+                              )
+                            : const Text(
+                                "Delivered.!",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                        // returnTime.inHours < 24
+                        //     ?
+                        returnTime.inHours < 24
+                            ? Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () async {
+                                      setState(() {
+                                        if (numberOfWeeks > 0) {
+                                          numberOfWeeks--;
+                                          final double salePrice =
+                                              double.tryParse(orderModel
+                                                      .salePrice
+                                                      .toString()) ??
+                                                  0.0;
+                                          final double newPrice =
+                                              salePrice + (salePrice * 0.05);
 
+                                          final double price =
+                                              newPrice * numberOfWeeks;
+                                          totalPrice = price +
+                                              orderModel.productTotalPrice;
+                                        }
+                                      });
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 14.0,
+                                      backgroundColor: numberOfWeeks > 0
+                                          ? AppConstant.appMainColor
+                                          : Colors.grey.shade400,
+                                      child: const Text('-',
+                                          style: TextStyle(
+                                              color: AppConstant.appTextColor)),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    "${numberOfWeeks.toString()} - Weeks",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      setState(() {
+                                        numberOfWeeks++;
+                                        final double salePrice =
+                                            double.tryParse(orderModel.salePrice
+                                                    .toString()) ??
+                                                0.0;
+                                        final double newPrice =
+                                            salePrice * 0.05 + salePrice;
+                                        final double price =
+                                            newPrice * numberOfWeeks;
+                                        totalPrice = price +
+                                            orderModel.productTotalPrice;
+                                      });
+                                    },
+                                    child: const CircleAvatar(
+                                      radius: 14.0,
+                                      backgroundColor: AppConstant.appMainColor,
+                                      child: Text('+',
+                                          style: TextStyle(
+                                              color: AppConstant.appTextColor)),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                        const SizedBox(height: 10),
+                        returnTime.inHours < 24
+                            ? InkWell(
+                                onTap: () {
+                                  print(numberOfWeeks);
+                                  DateTime returnTime = DateTime.now().add(
+                                      Duration(days: 7 * (numberOfWeeks + 1)));
+                                  updateOrder(OrderModel.fromMap({
+                                    ...orderModel.toMap(),
+                                    'numberOfWeeks': 5,
+                                    'returnTime': returnTime,
+                                    'productTotalPrice': totalPrice,
+                                  }));
+                                },
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 60),
+                                    child: Container(
+                                      height: 30,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: AppConstant.appMainColor,
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Update',
+                                          style: TextStyle(
+                                            color: AppConstant.appTextColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        // : const SizedBox.shrink()
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           }
           return Container();

@@ -27,7 +27,8 @@ class CheckOutScreen extends StatefulWidget {
 
 class _CheckOutScreenState extends State<CheckOutScreen> {
   // CART PRICE CONTROLLER
-  final ProductPriceController productPriceController = Get.put(ProductPriceController());
+  final ProductPriceController productPriceController =
+      Get.put(ProductPriceController());
 
   User? user = FirebaseAuth.instance.currentUser;
 
@@ -59,16 +60,20 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         ),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('cart').doc(user!.uid).collection('cartOrders').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-          if(snapshot.hasError){
+        stream: FirebaseFirestore.instance
+            .collection('cart')
+            .doc(user!.uid)
+            .collection('cartOrders')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
             return Center(
               child: Text(
                 "Error!",
               ),
             );
           }
-          if(snapshot.connectionState == ConnectionState.waiting){
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               height: Get.height / 5,
               child: Center(
@@ -76,14 +81,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               ),
             );
           }
-          if(snapshot.data!.docs.isEmpty){
+          if (snapshot.data!.docs.isEmpty) {
             return Center(
               child: Text(
                 "No products Found In The App!!",
               ),
             );
           }
-          if(snapshot.data != null){
+          if (snapshot.data != null) {
             return Container(
               child: ListView.builder(
                 itemCount: snapshot.data!.docs.length,
@@ -94,6 +99,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
                   // model values
                   CartModel cartModel = CartModel(
+                    returnTime: DateTime.fromMillisecondsSinceEpoch(
+                        productData['returnTime'].millisecondsSinceEpoch),
                     productId: productData['productId'],
                     numberOfWeeks: productData['numberOfWeeks'],
                     categoryId: productData['categoryId'],
@@ -115,7 +122,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   String productName = productData['productName'];
                   double productTotalPrice = productData['productTotalPrice'];
                   int productQuantity = productData['productQuantity'];
-                  List<String> productImages = List<String>.from(productData['productImages']);
+                  List<String> productImages =
+                      List<String>.from(productData['productImages']);
 
                   // CALCULATING PRICE
                   productPriceController.fetchProductPrice();
@@ -135,7 +143,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
                             image: DecorationImage(
-                              image: NetworkImage(productImages.isNotEmpty ? productImages[0] : ''),
+                              image: NetworkImage(productImages.isNotEmpty
+                                  ? productImages[0]
+                                  : ''),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -180,7 +190,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               padding: const EdgeInsets.only(left: 16.0),
               child: Text(
                 "Total :",
-                style: TextStyle(color: AppConstant.appMainColor, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: AppConstant.appMainColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             Obx(() {
@@ -225,7 +237,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   void showCustomBottomSheet() {
     Get.bottomSheet(
       StatefulBuilder(
-        builder: (BuildContext context, void Function(void Function()) setState) {
+        builder:
+            (BuildContext context, void Function(void Function()) setState) {
           return Container(
             height: Get.height * 0.9,
             decoration: const BoxDecoration(
@@ -246,7 +259,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: AppConstant.appMainColor, // Match your app's primary color
+                        color: AppConstant
+                            .appMainColor, // Match your app's primary color
                       ),
                     ),
                   ),
@@ -265,7 +279,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppConstant.appMainColor),
+                          borderSide:
+                              BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -288,7 +303,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppConstant.appMainColor),
+                          borderSide:
+                              BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -311,7 +327,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppConstant.appMainColor),
+                          borderSide:
+                              BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -335,7 +352,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppConstant.appMainColor),
+                          borderSide:
+                              BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -376,7 +394,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 return AlertDialog(
                                   title: Text(
                                     "Purpose of CNIC Image",
-                                    style: TextStyle(color: AppConstant.appMainColor),
+                                    style: TextStyle(
+                                        color: AppConstant.appMainColor),
                                   ),
                                   content: Text(
                                     "The CNIC image will be used to verify your identity during product delivery for security purposes.",
@@ -388,7 +407,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       },
                                       child: Text(
                                         'OK',
-                                        style: TextStyle(color: AppConstant.appMainColor),
+                                        style: TextStyle(
+                                            color: AppConstant.appMainColor),
                                       ),
                                     ),
                                   ],
@@ -405,13 +425,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ],
                     ),
                   ),
-
                   SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: CommonProfileImage(
                       onTap: () async {
-                        var imageFile = await ImagePicker.platform.getImage(source: ImageSource.gallery);
+                        var imageFile = await ImagePicker.platform
+                            .getImage(source: ImageSource.gallery);
                         if (imageFile == null) return;
                         File tmpFile = File(imageFile.path);
                         setState(() {
@@ -422,13 +442,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       imageFile: selectedImage,
                     ),
                   ),
-
                   SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppConstant.appMainColor, // Match your app's primary color
+                        backgroundColor: AppConstant
+                            .appMainColor, // Match your app's primary color
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
