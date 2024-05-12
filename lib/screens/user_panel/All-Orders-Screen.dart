@@ -135,18 +135,20 @@ class _AllOrdersScreen extends State<AllOrdersScreen> {
                       children: [
                         orderModel.status == false
                             ? const SizedBox.shrink()
-                            : SlideCountdown(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                duration: returnTime,
-                                slideDirection: SlideDirection.down,
-                                separator: ":",
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
+                            : returnTime.inMinutes == 0
+                                ? const Text('Time Over')
+                                : SlideCountdown(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    duration: returnTime,
+                                    slideDirection: SlideDirection.down,
+                                    separator: ":",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                         Text(
                           orderModel.productName,
                           style: const TextStyle(
@@ -254,7 +256,16 @@ class _AllOrdersScreen extends State<AllOrdersScreen> {
                         returnTime.inHours < 24
                             ? InkWell(
                                 onTap: () {
-                                  print(numberOfWeeks);
+                                  if (numberOfWeeks == 0) {
+                                    Get.snackbar(
+                                      'Select Weeks',
+                                      'Please select the number of weeks to update the order..',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                    return;
+                                  }
                                   DateTime returnTime = DateTime.now().add(
                                       Duration(days: 7 * (numberOfWeeks + 1)));
                                   updateOrder(OrderModel.fromMap({
@@ -262,6 +273,7 @@ class _AllOrdersScreen extends State<AllOrdersScreen> {
                                     'numberOfWeeks': 5,
                                     'returnTime': returnTime,
                                     'productTotalPrice': totalPrice,
+                                    'status': false,
                                   }));
                                 },
                                 child: Center(
