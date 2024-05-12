@@ -2,12 +2,10 @@ import 'dart:io';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:electro_rent/screens/user_panel/CheckOut-Screen.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
 import '../../controllers/Cart-Price-Controller.dart';
@@ -16,9 +14,9 @@ import '../../models/Cart-Model.dart';
 import '../../services/Place-Order-Service.dart';
 import '../../utils/validator.dart';
 import '../../widgets/custom_image_picker.dart';
-import 'Check-Out_Dialouge-Screen.dart';
 
 class CheckOutScreen extends StatefulWidget {
+  // ignore: use_key_in_widget_constructors
   const CheckOutScreen({Key? key});
 
   @override
@@ -53,8 +51,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppConstant.appMainColor,
-        iconTheme: IconThemeData(color: AppConstant.appTextColor),
-        title: Text(
+        iconTheme: const IconThemeData(color: AppConstant.appTextColor),
+        title: const Text(
           'Check Out Screen..',
           style: TextStyle(color: AppConstant.appTextColor),
         ),
@@ -67,127 +65,124 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Center(
+            return const Center(
               child: Text(
                 "Error!",
               ),
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
+            return SizedBox(
               height: Get.height / 5,
-              child: Center(
+              child: const Center(
                 child: CupertinoActivityIndicator(),
               ),
             );
           }
           if (snapshot.data!.docs.isEmpty) {
-            return Center(
+            return const Center(
               child: Text(
                 "No products Found In The App!!",
               ),
             );
           }
           if (snapshot.data != null) {
-            return Container(
-              child: ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final productData = snapshot.data!.docs[index];
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                final productData = snapshot.data!.docs[index];
 
-                  // model values
-                  CartModel cartModel = CartModel(
-                    returnTime: DateTime.fromMillisecondsSinceEpoch(
-                        productData['returnTime'].millisecondsSinceEpoch),
-                    productId: productData['productId'],
-                    numberOfWeeks: productData['numberOfWeeks'],
-                    categoryId: productData['categoryId'],
-                    productName: productData['productName'],
-                    categoryName: productData['categoryName'],
-                    salePrice: productData['salePrice'],
-                    rentPrice: productData['rentPrice'],
-                    deliveryTime: productData['deliveryTime'],
-                    isSale: productData['isSale'],
-                    productImages: productData['productImages'],
-                    productDescription: productData['productDescription'],
-                    createdAt: productData['createdAt'],
-                    updatedAt: productData['updatedAt'],
-                    productQuantity: productData['productQuantity'],
-                    productTotalPrice: productData['productTotalPrice'],
-                  );
+                // model values
+                CartModel cartModel = CartModel(
+                  returnTime: DateTime.fromMillisecondsSinceEpoch(
+                      productData['returnTime'].millisecondsSinceEpoch),
+                  productId: productData['productId'],
+                  numberOfWeeks: productData['numberOfWeeks'],
+                  categoryId: productData['categoryId'],
+                  productName: productData['productName'],
+                  categoryName: productData['categoryName'],
+                  salePrice: productData['salePrice'],
+                  rentPrice: productData['rentPrice'],
+                  deliveryTime: productData['deliveryTime'],
+                  isSale: productData['isSale'],
+                  productImages: productData['productImages'],
+                  productDescription: productData['productDescription'],
+                  createdAt: productData['createdAt'],
+                  updatedAt: productData['updatedAt'],
+                  productQuantity: productData['productQuantity'],
+                  productTotalPrice: productData['productTotalPrice'],
+                );
 
-                  // Extracting product details from Firestore snapshot
-                  String productName = productData['productName'];
-                  double productTotalPrice = productData['productTotalPrice'];
-                  int productQuantity = productData['productQuantity'];
-                  List<String> productImages =
-                      List<String>.from(productData['productImages']);
+                // Extracting product details from Firestore snapshot
+                String productName = productData['productName'];
+                double productTotalPrice = productData['productTotalPrice'];
+                List<String> productImages =
+                    List<String>.from(productData['productImages']);
 
-                  // CALCULATING PRICE
-                  productPriceController.fetchProductPrice();
+                // CALCULATING PRICE
+                productPriceController.fetchProductPrice();
 
-                  return SwipeActionCell(
-                    key: ObjectKey(cartModel.productId),
-                    child: Card(
-                      elevation: 5,
-                      color: AppConstant.appTextColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                return SwipeActionCell(
+                  key: ObjectKey(cartModel.productId),
+                  child: Card(
+                    elevation: 5,
+                    color: AppConstant.appTextColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: ListTile(
+                      leading: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          image: DecorationImage(
+                            image: NetworkImage(productImages.isNotEmpty
+                                ? productImages[0]
+                                : ''),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      child: ListTile(
-                        leading: Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            image: DecorationImage(
-                              image: NetworkImage(productImages.isNotEmpty
-                                  ? productImages[0]
-                                  : ''),
-                              fit: BoxFit.cover,
+                      title: Text(
+                        productName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 5),
+                          Text(
+                            'Total Price: PKR: ${productTotalPrice.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.grey,
                             ),
                           ),
-                        ),
-                        title: Text(
-                          productName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 5),
-                            Text(
-                              'Total Price: PKR: ${productTotalPrice.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                          ],
-                        ),
+                          const SizedBox(height: 5),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             );
           }
           return Container();
         },
       ),
       bottomNavigationBar: Container(
-        margin: EdgeInsets.only(bottom: 5.0),
+        margin: const EdgeInsets.only(bottom: 5.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
+            const Padding(
+              padding: EdgeInsets.only(left: 16.0),
               child: Text(
                 "Total :",
                 style: TextStyle(
@@ -199,7 +194,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               double totalPrice = productPriceController.totalPrice.value;
               return Text(
                 "${totalPrice.toStringAsFixed(1)} : PKR",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               );
             }),
             Padding(
@@ -213,11 +208,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   child: TextButton.icon(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.shopping_bag,
                       color: AppConstant.appTextColor,
                     ),
-                    label: Text(
+                    label: const Text(
                       'CheckOut!!',
                       style: TextStyle(color: AppConstant.appTextColor),
                     ),
@@ -270,97 +265,101 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       controller: nameController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.name,
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Name",
-                        labelStyle: TextStyle(color: AppConstant.appMainColor),
+                        labelStyle:
+                            const TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                          borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: AppConstant.appMainColor),
+                              const BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 15.0),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextFormField(
                       controller: phoneController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.phone,
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Phone",
-                        labelStyle: TextStyle(color: AppConstant.appMainColor),
+                        labelStyle:
+                            const TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                          borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: AppConstant.appMainColor),
+                              const BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 15.0),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextFormField(
                       controller: addressController,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.streetAddress,
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Address",
-                        labelStyle: TextStyle(color: AppConstant.appMainColor),
+                        labelStyle: const TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                          borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: AppConstant.appMainColor),
+                              const BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextFormField(
                       controller: idNumber,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.number,
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       validator: cnicValidator,
                       decoration: InputDecoration(
                         labelText: "CNIC",
-                        labelStyle: TextStyle(color: AppConstant.appMainColor),
+                        labelStyle: const TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+                          borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: AppConstant.appMainColor),
+                              const BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
@@ -370,7 +369,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             animatedTexts: [
                               ColorizeAnimatedText(
                                 "Add your CNIC image",
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -392,12 +391,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text(
+                                  title: const Text(
                                     "Purpose of CNIC Image",
                                     style: TextStyle(
                                         color: AppConstant.appMainColor),
                                   ),
-                                  content: Text(
+                                  content: const Text(
                                     "The CNIC image will be used to verify your identity during product delivery for security purposes.",
                                   ),
                                   actions: <Widget>[
@@ -405,7 +404,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'OK',
                                         style: TextStyle(
                                             color: AppConstant.appMainColor),
@@ -416,7 +415,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               },
                             );
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.info_outline,
                             color: AppConstant.appMainColor,
                             size: 24.0,
@@ -425,24 +424,24 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: CommonProfileImage(
                       onTap: () async {
+                        // ignore: invalid_use_of_visible_for_testing_member
                         var imageFile = await ImagePicker.platform
                             .getImage(source: ImageSource.gallery);
                         if (imageFile == null) return;
                         File tmpFile = File(imageFile.path);
                         setState(() {
                           selectedImage = tmpFile;
-                          print('Path: ${selectedImage?.path}');
                         });
                       },
                       imageFile: selectedImage,
                     ),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: ElevatedButton(
@@ -475,6 +474,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
                           // Place Order Service
                           placeOrder(
+                            // ignore: use_build_context_synchronously
                             context: context,
                             customerName: name,
                             customerPhone: phone,
@@ -485,8 +485,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           );
                         }
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(15.0),
                         child: Text(
                           "Place Your Order",
                           style: TextStyle(
