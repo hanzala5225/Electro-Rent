@@ -32,7 +32,7 @@ class ProductPriceController extends GetxController {
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
-      if (data != null && data.containsKey('productTotalPrice')) {
+      if (data.containsKey('productTotalPrice')) {
         sum += (data['productTotalPrice'] as num).toDouble();
       }
     }
@@ -53,7 +53,7 @@ class ProductPriceController extends GetxController {
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
-      if (data != null && data.containsKey('numberOfWeeks')) {
+      if (data.containsKey('numberOfWeeks')) {
         sum += data['numberOfWeeks'] as int;
       }
     }

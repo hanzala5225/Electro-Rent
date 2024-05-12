@@ -74,5 +74,6 @@ Future<UserCredential?> signUpMethod(
       colorText: AppConstant.appTextColor,
     );
   }
+  return null;
 }
 }

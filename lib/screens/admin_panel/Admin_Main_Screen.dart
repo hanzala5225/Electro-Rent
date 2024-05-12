@@ -1,4 +1,3 @@
-import 'package:electro_rent/utils/app_constant.dart';
 import 'package:flutter/material.dart';
 
 class AdminMainScreen extends StatefulWidget {
@@ -13,7 +12,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(
       title:
-      Text("Admin Screen",),
+      const Text("Admin Screen",),
     ),
     );
   }
