@@ -104,7 +104,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                     ),
 
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(

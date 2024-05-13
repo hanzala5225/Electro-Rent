@@ -41,7 +41,7 @@ class GoogleSignInController extends GetxController{
             UserModel userModel = UserModel(
               uId: user.uid,
               username: user.displayName.toString(),
-              email: user.email.toString(),
+              email: user.email!.toString(),
               phone: user.phoneNumber.toString(),
               userImg: user.photoURL.toString(),
               userDeviceToken: deviceTokenController.deviceToken.toString(),
