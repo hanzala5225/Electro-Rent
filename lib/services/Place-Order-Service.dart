@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/screens/user_panel/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../models/Order-Model.dart';
 import '../../services/Generate-Order-ID-Service.dart';
@@ -45,9 +43,8 @@ void placeOrder(
         String orderId = generateOrderId();
 
         //Order Model
-        OrderModel cartModel = OrderModel(
-          numberOfWeeks: data['numberOfWeeks'],
-          // returnTime: data['returnTime'],
+        OrderModel orderModel = OrderModel(
+          numberOfWeeks: int.parse(data['numberOfWeeks'].toString()),
           returnTime: DateTime.fromMillisecondsSinceEpoch(
               data['returnTime'].millisecondsSinceEpoch),
           productId: data['productId'],
@@ -63,9 +60,7 @@ void placeOrder(
           createdAt: DateTime.now(),
           updatedAt: data['updatedAt'],
           productQuantity: data['productQuantity'],
-          productTotalPrice: double.parse(
-            data['productTotalPrice'].toString(),
-          ),
+          productTotalPrice: double.parse(data['productTotalPrice'].toString()),
           customerId: user.uid,
           status: false,
           cnicNumber: cnicNumber,
@@ -75,7 +70,7 @@ void placeOrder(
           customerDeviceToken: customerDeviceToken,
           customerAddress: customerAddress,
         );
-
+        print(orderModel.toMap().toString() + 'dkndfjbvdjfbv');
         for (var x = 0; x < documents.length; x++) {
           await FirebaseFirestore.instance
               .collection('orders')
@@ -95,7 +90,7 @@ void placeOrder(
               .doc(user.uid)
               .collection('confirmOrders')
               .doc(orderId)
-              .set(cartModel.toMap());
+              .set(orderModel.toMap());
 
           // delete Orders...........
 
@@ -103,10 +98,10 @@ void placeOrder(
               .collection('cart')
               .doc(user.uid)
               .collection('cartOrders')
-              .doc(cartModel.productId.toString())
+              .doc(orderModel.productId.toString())
               .delete()
               .then((value) {
-            print('Delete Cart Products $cartModel.productId.toString()');
+            print('Delete Cart Products $orderModel.productId.toString()');
           });
         }
       }
