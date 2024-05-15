@@ -4,13 +4,9 @@ import 'package:electro_rent/screens/user_panel/Products-Detail-Screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_card/image_card.dart';
-
-import '../../models/Categories-Model.dart';
 import '../../models/Product-Model.dart';
 import '../../utils/app_constant.dart';
-import 'Single-Category-Product-Screen.dart';
 
 class AllFlashSaleProductsScreen extends StatefulWidget {
   const AllFlashSaleProductsScreen({super.key});

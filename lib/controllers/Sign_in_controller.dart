@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:electro_rent/utils/app_constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -6,7 +5,6 @@ import 'package:get/get.dart';
 
 class SignInController extends GetxController{
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // for password visibility
@@ -41,5 +39,6 @@ class SignInController extends GetxController{
         colorText: AppConstant.appTextColor,
       );
     }
+    return null;
   }
 }

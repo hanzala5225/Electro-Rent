@@ -1,14 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-
-import 'custom_rect_cached_image.dart';
 
 class CommonProfileImage extends StatelessWidget {
   final File? imageFile;
   final String? imgLink;
   final VoidCallback onTap;
-  const CommonProfileImage({Key? key, this.imageFile, required this.onTap, this.imgLink}) : super(key: key);
+  const CommonProfileImage({super.key, this.imageFile, required this.onTap, this.imgLink});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +37,7 @@ class CommonProfileImage extends StatelessWidget {
             //   width: double.infinity,
             // )
             //     :
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(30),
               child: Icon(Icons.camera_alt, size: 18,)
             ),
