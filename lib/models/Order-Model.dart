@@ -76,6 +76,7 @@ class OrderModel {
       'customerPhone': customerPhone,
       'customerAddress': customerAddress,
       'customerDeviceToken': customerDeviceToken,
+      'numberOfWeeks': numberOfWeeks,
     };
   }
 

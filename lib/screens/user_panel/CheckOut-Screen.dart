@@ -320,7 +320,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         labelText: "Address",
-                        labelStyle: const TextStyle(color: AppConstant.appMainColor),
+                        labelStyle:
+                            const TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
@@ -330,7 +331,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               const BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 15.0),
                       ),
                     ),
                   ),
@@ -345,7 +347,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       validator: cnicValidator,
                       decoration: InputDecoration(
                         labelText: "CNIC",
-                        labelStyle: const TextStyle(color: AppConstant.appMainColor),
+                        labelStyle:
+                            const TextStyle(color: AppConstant.appMainColor),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10),
@@ -355,7 +358,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               const BorderSide(color: AppConstant.appMainColor),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 15.0),
                       ),
                     ),
                   ),
